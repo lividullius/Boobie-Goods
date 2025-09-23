@@ -11,22 +11,6 @@ public class ContratoDTO {
     private int numeroHorasSemana;
     private double valorHora;
 
-    // Construtor padrão
-    public ContratoDTO() {}
-
-    // Construtor cheio
-    public ContratoDTO(int id, int idPessoa, int idPerfil,
-                       LocalDate dataInicioContrato, LocalDate dataFimContrato,
-                       int numeroHorasSemana, double valorHora) {
-        this.id = id;
-        this.idPessoa = idPessoa;
-        this.idPerfil = idPerfil;
-        this.dataInicioContrato = dataInicioContrato;
-        this.dataFimContrato = dataFimContrato;
-        this.numeroHorasSemana = numeroHorasSemana;
-        this.valorHora = valorHora;
-    }
-
     // Getters e setters
     public int getId() {
         return id;

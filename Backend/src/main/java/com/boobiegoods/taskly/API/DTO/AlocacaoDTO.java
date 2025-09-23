@@ -7,18 +7,6 @@ public class AlocacaoDTO {
     private int idPessoa;
     private int horasSemanal;
 
-    // Construtor padrão
-    public AlocacaoDTO() {}
-
-    // Construtor cheio
-    public AlocacaoDTO(int idAlocacao, int idProjeto, int idContrato, int idPessoa, int horasSemanal) {
-        this.idAlocacao = idAlocacao;
-        this.idProjeto = idProjeto;
-        this.idContrato = idContrato;
-        this.idPessoa = idPessoa;
-        this.horasSemanal = horasSemanal;
-    }
-
     // Getters e setters
     public int getIdAlocacao() {
         return idAlocacao;

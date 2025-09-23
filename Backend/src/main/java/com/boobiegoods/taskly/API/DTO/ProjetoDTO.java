@@ -9,19 +9,6 @@ public class ProjetoDTO {
     private LocalDate dataInicioProjeto;
     private LocalDate dataTerminoProjeto;
 
-    // Construtor padrão
-    public ProjetoDTO() {}
-
-    // Construtor cheio
-    public ProjetoDTO(int id, String nomeProjeto, String descricaoProjeto, 
-                      LocalDate dataInicioProjeto, LocalDate dataTerminoProjeto) {
-        this.id = id;
-        this.nomeProjeto = nomeProjeto;
-        this.descricaoProjeto = descricaoProjeto;
-        this.dataInicioProjeto = dataInicioProjeto;
-        this.dataTerminoProjeto = dataTerminoProjeto;
-    }
-
     // Getters e setters
     public int getId() {
         return id;

@@ -4,15 +4,6 @@ public class PessoaDTO {
     private int id;
     private String nome;
 
-    // Construtor padrão
-    public PessoaDTO() {}
-
-    // Construtor cheio
-    public PessoaDTO(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
-
     // Getters e setters
     public int getId() {
         return id;
