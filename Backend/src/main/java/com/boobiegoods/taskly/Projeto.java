@@ -1,13 +1,35 @@
 package com.boobiegoods.taskly;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.HashSet;
 
+@Entity
+@Table(name = "Projeto")
 public class Projeto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IDProjeto")
     private int id;
+    
+    @Column(name = "Nome", nullable = false, length = 100)
     private String nomeProjeto;
+    
+    @Column(name = "Descricao", length = 255)
     private String descricaoProjeto;
+    
+    @Column(name = "DataInicioProj", nullable = false)
     private LocalDate dataInicioProjeto;
+    
+    @Column(name = "DataFimProj")
     private LocalDate dataTerminoProjeto;
+    
+    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Alocacao> alocacoes = new HashSet<>();
+    
+    // Construtor padrão (obrigatório para JPA)
+    public Projeto() {}
     
     // Construtor
     public Projeto(int idProjeto, String nomeProjeto, String descricaoProjeto, LocalDate dataInicioProjeto, LocalDate dataTerminoProjeto) {
@@ -48,5 +70,11 @@ public class Projeto {
     }
     public void setDataTerminoProjeto(LocalDate dataTerminoProjeto) {
         this.dataTerminoProjeto = dataTerminoProjeto;
+    }
+    public Set<Alocacao> getAlocacoes() {
+        return alocacoes;
+    }
+    public void setAlocacoes(Set<Alocacao> alocacoes) {
+        this.alocacoes = alocacoes;
     }
 }
