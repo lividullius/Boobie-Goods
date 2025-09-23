@@ -1,21 +1,21 @@
 package com.boobiegoods.taskly;
 
 public class Perfil {
-    int idPerfil;
-    TipoPerfil tipo;
+    private int id;
+    private TipoPerfil tipo;
 
     // Construtor
     public Perfil(int idPerfil, TipoPerfil tipo) {
-        this.idPerfil = idPerfil;
+        this.id = idPerfil;
         this.tipo = tipo;
     }
     
     // Getters e setters
-    public int getIdPerfil() {
-        return idPerfil;
+    public int getId() {
+        return id;
     }
-    public void setIdPerfil(int idPerfil) {
-        this.idPerfil = idPerfil;
+    public void setId(int idPerfil) {
+        this.id = idPerfil;
     }
     public TipoPerfil getTipo() {
         return tipo;
