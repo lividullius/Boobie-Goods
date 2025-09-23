@@ -4,14 +4,13 @@ import java.time.LocalDate;
 
 public class ContratoDTO {
     private int id;
-    private int idPessoa;
-    private int idPerfil;
+    private int fkPessoa;
+    private int fkPerfil;
     private LocalDate dataInicioContrato;
     private LocalDate dataFimContrato;
     private int numeroHorasSemana;
     private double valorHora;
 
-    // Getters e setters
     public int getId() {
         return id;
     }
@@ -19,18 +18,18 @@ public class ContratoDTO {
         this.id = id;
     }
 
-    public int getIdPessoa() {
-        return idPessoa;
+    public int getFkPessoa() {
+        return fkPessoa;
     }
-    public void setIdPessoa(int idPessoa) {
-        this.idPessoa = idPessoa;
+    public void setFkPessoa(int fkPessoa) {
+        this.fkPessoa = fkPessoa;
     }
 
-    public int getIdPerfil() {
-        return idPerfil;
+    public int getFkPerfil() {
+        return fkPerfil;
     }
-    public void setIdPerfil(int idPerfil) {
-        this.idPerfil = idPerfil;
+    public void setFkPerfil(int fkPerfil) {
+        this.fkPerfil = fkPerfil;
     }
 
     public LocalDate getDataInicioContrato() {

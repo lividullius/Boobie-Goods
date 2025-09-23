@@ -1,51 +1,44 @@
 package com.boobiegoods.taskly.API.DTO;
 
 public class AlocacaoDTO {
-    private int idAlocacao;
-    private int idProjeto;
-    private int idContrato;
-    private int idPessoa;
+    private int id;
+    private int fkProjeto;
+    private int fkContrato;
+    private int fkPessoa;
     private int horasSemanal;
 
-    // Getters e setters
-    public int getIdAlocacao() {
-        return idAlocacao;
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setIdAlocacao(int idAlocacao) {
-        this.idAlocacao = idAlocacao;
+    public int getFkProjeto() {
+        return fkProjeto;
+    }
+    public void setFkProjeto(int fkProjeto) {
+        this.fkProjeto = fkProjeto;
     }
 
-    public int getIdProjeto() {
-        return idProjeto;
+    public int getFkContrato() {
+        return fkContrato;
+    }
+    public void setFkContrato(int fkContrato) {
+        this.fkContrato = fkContrato;
     }
 
-    public void setIdProjeto(int idProjeto) {
-        this.idProjeto = idProjeto;
+    public int getFkPessoa() {
+        return fkPessoa;
     }
-
-    public int getIdContrato() {
-        return idContrato;
-    }
-
-    public void setIdContrato(int idContrato) {
-        this.idContrato = idContrato;
-    }
-
-    public int getIdPessoa() {
-        return idPessoa;
-    }
-
-    public void setIdPessoa(int idPessoa) {
-        this.idPessoa = idPessoa;
+    public void setFkPessoa(int fkPessoa) {
+        this.fkPessoa = fkPessoa;
     }
 
     public int getHorasSemanal() {
         return horasSemanal;
     }
-
     public void setHorasSemanal(int horasSemanal) {
         this.horasSemanal = horasSemanal;
     }
-
 }

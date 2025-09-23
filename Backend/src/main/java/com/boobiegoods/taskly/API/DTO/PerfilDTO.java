@@ -2,7 +2,7 @@ package com.boobiegoods.taskly.API.DTO;
 
 public class PerfilDTO {
     private int id;
-    private String tipo; // representando o Enum como String para facilitar transporte de dados
+    private String tipo; 
 
     // Getters e setters
     public int getId() {
