@@ -1,17 +1,19 @@
 package com.boobiegoods.taskly;
 
+import java.time.LocalDate;
+
 public class Contrato {
-    int idContrato;
-    Pessoa pessoa;
-    Perfil perfil;
-    String dataInicioContrato;
-    String dataFimContrato;
-    int numeroHorasSemana;
-    double valorHora;
+    private int id;
+    private Pessoa pessoa;
+    private Perfil perfil;
+    private LocalDate dataInicioContrato;
+    private LocalDate dataFimContrato;
+    private int numeroHorasSemana;
+    private double valorHora;
 
     // Construtor
-    public Contrato(int idContrato, Pessoa pessoa, Perfil perfil, String dataInicio, String dataFimContrato, int numeroHorasSemana, double valorHora) {
-        this.idContrato = idContrato;
+    public Contrato(int idContrato, Pessoa pessoa, Perfil perfil, LocalDate dataInicio, LocalDate dataFimContrato, int numeroHorasSemana, double valorHora) {
+        this.id = idContrato;
         this.pessoa = pessoa;
         this.perfil = perfil;
         this.dataInicioContrato = dataInicio;
@@ -21,11 +23,11 @@ public class Contrato {
     }
 
     // Getters e setters
-    public int getIdContrato() {
-        return idContrato;
+    public int getId() {
+        return id;
     }
-    public void setIdContrato(int idContrato) {
-        this.idContrato = idContrato;
+    public void setId(int idContrato) {
+        this.id = idContrato;
     }
     public Pessoa getPessoa() {
         return pessoa;
@@ -39,16 +41,16 @@ public class Contrato {
     public void setPerfil(Perfil perfil) {
         this.perfil = perfil;
     }
-    public String getDataInicioContrato() {
+    public LocalDate getDataInicioContrato() {
         return dataInicioContrato;
     }
-    public void setDataInicioContrato(String dataInicioContrato) {
+    public void setDataInicioContrato(LocalDate dataInicioContrato) {
         this.dataInicioContrato = dataInicioContrato;
     }
-    public String getDataFimContrato() {
+    public LocalDate getDataFimContrato() {
         return dataFimContrato;
     }
-    public void setDataFimContrato(String dataFimContrato) {
+    public void setDataFimContrato(LocalDate dataFimContrato) {
         this.dataFimContrato = dataFimContrato;
     }
     public int getNumeroHorasSemana() {

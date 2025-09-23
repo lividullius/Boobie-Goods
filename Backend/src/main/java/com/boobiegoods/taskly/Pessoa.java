@@ -1,21 +1,22 @@
 package com.boobiegoods.taskly;
 
 public class Pessoa {
-    int idPessoa;
-    String nome;
+    private int id;
+    private String nome;
+    
 
     // Construtor
     public Pessoa(int idPessoa, String nome) {
-        this.idPessoa = idPessoa;
+        this.id = idPessoa;
         this.nome = nome;
     }
 
     // Getters e setters
-    public int getIdPessoa() {
-        return idPessoa;
+    public int getId() {
+        return id;
     }
-    public void setIdPessoa(int idPessoa) {
-        this.idPessoa = idPessoa;
+    public void setId(int idPessoa) {
+        this.id = idPessoa;
     }
     public String getNome() {
         return nome;

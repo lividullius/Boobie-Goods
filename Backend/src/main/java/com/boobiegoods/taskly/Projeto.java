@@ -1,15 +1,17 @@
 package com.boobiegoods.taskly;
 
+import java.time.LocalDate;
+
 public class Projeto {
-    int idProjeto;
-    String nomeProjeto;
-    String descricaoProjeto;
-    String dataInicioProjeto;
-    String dataTerminoProjeto;
+    private int id;
+    private String nomeProjeto;
+    private String descricaoProjeto;
+    private LocalDate dataInicioProjeto;
+    private LocalDate dataTerminoProjeto;
     
     // Construtor
-    public Projeto(int idProjeto, String nomeProjeto, String descricaoProjeto, String dataInicioProjeto, String dataTerminoProjeto) {
-        this.idProjeto = idProjeto;
+    public Projeto(int idProjeto, String nomeProjeto, String descricaoProjeto, LocalDate dataInicioProjeto, LocalDate dataTerminoProjeto) {
+        this.id = idProjeto;
         this.nomeProjeto = nomeProjeto;
         this.descricaoProjeto = descricaoProjeto;
         this.dataInicioProjeto = dataInicioProjeto;
@@ -17,11 +19,11 @@ public class Projeto {
     }  
 
     // Getters e setters 
-    public int getIdProjeto() {
-        return idProjeto;
+    public int getId() {
+        return id;
     }
-    public void setIdProjeto(int idProjeto) {
-        this.idProjeto = idProjeto;
+    public void setId(int idProjeto) {
+        this.id = idProjeto;
     }
     public String getNomeProjeto() {
         return nomeProjeto;
@@ -35,16 +37,16 @@ public class Projeto {
     public void setDescricaoProjeto(String descricaoProjeto) {
         this.descricaoProjeto = descricaoProjeto;
     }
-    public String getDataInicioProjeto() {
+    public LocalDate getDataInicioProjeto() {
         return dataInicioProjeto;
     }
-    public void setDataInicioProjeto(String dataInicioProjeto) {
+    public void setDataInicioProjeto(LocalDate dataInicioProjeto) {
         this.dataInicioProjeto = dataInicioProjeto;
     }
-    public String getDataTerminoProjeto() {
+    public LocalDate getDataTerminoProjeto() {
         return dataTerminoProjeto;
     }
-    public void setDataTerminoProjeto(String dataTerminoProjeto) {
+    public void setDataTerminoProjeto(LocalDate dataTerminoProjeto) {
         this.dataTerminoProjeto = dataTerminoProjeto;
     }
 }
