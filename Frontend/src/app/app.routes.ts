@@ -1,11 +1,17 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'projetos/novo',
+    path: 'projetos',
     loadComponent: () =>
-      import('./features/projects/project-create/project-create.component')
-        .then(m => m.ProjectCreateComponent)
+      import('./projeto/projeto.component').then(m => m.ProjetoComponent)
   },
-  { path: '', pathMatch: 'full', redirectTo: 'projetos/novo' }
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('../mainpage/mainpage.component').then(m => m.MainpageComponent) // <- subiu um nível
+  },
+  { path: '', pathMatch: 'full', redirectTo: 'projetos' },
+  { path: '**', redirectTo: 'projetos' }
 ];

@@ -1,0 +1,53 @@
+<div class="modal fade" id="modalProjeto" tabindex="-1" aria-labelledby="modalProjetoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProjetoLabel">Criar Projeto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form #formProjeto="ngForm" (ngSubmit)="onSalvarProjeto(formProjeto)" autocomplete="off">
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label for="nomeProj" class="form-label">Nome*</label>
+            <input id="nomeProj" name="nome" type="text" class="form-control"
+                   [(ngModel)]="projeto.nome" required maxlength="100">
+            <small class="text-danger"
+                   *ngIf="formProjeto.submitted && !formProjeto.controls['nome']?.valid">
+              Informe o nome do projeto (até 100 caracteres).
+            </small>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Data início*</label>
+              <input type="date" name="dataInicio" class="form-control"
+                     [(ngModel)]="projeto.dataInicio" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Data fim</label>
+              <input type="date" name="dataFim" class="form-control"
+                     [(ngModel)]="projeto.dataFim"
+                     [min]="projeto.dataInicio | date:'yyyy-MM-dd'">
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label">Descrição</label>
+            <textarea name="descricao" rows="3" class="form-control"
+                      [(ngModel)]="projeto.descricao" maxlength="255"></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="formProjeto.invalid">Salvar projeto</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

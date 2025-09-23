@@ -1,0 +1,51 @@
+/* ocupa a área útil e centraliza o conteúdo */
+.page {
+  min-height: calc(100vh - 80px); /* ajuste se tiver navbar fixa */
+  display: flex;
+  flex-direction: column;
+  align-items: center;            /* <-- centraliza horizontalmente */
+  padding: 24px 16px;
+}
+
+/* título + botão alinhados e centralizados dentro da largura */
+.header {
+  width: min(1100px, 92vw);       /* largura máxima */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* título à esquerda, botão à direita */
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+/* card/área da tabela centralizada */
+.table-wrap {
+  width: min(1100px, 92vw);       /* mesma largura do header */
+  background: #FCE7D2;            /* paleta (bege) – opcional */
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  overflow: auto;                 /* scroll se a tabela ficar larga */
+}
+
+/* estilização básica de tabela (se não estiver usando Material Table) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+th {
+  font-weight: 700;
+}
+
+/* deixa o botão na cor principal da sua paleta */
+:host ::ng-deep .mat-mdc-raised-button.mat-primary {
+  background: #EB5874; /* rosa da paleta */
+}
