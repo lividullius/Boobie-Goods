@@ -1,4 +1,4 @@
-package com.boobiegoods.taskly;
+package com.boobiegoods.taskly.Domain;
 
 public enum TipoPerfil {
     Developer,
