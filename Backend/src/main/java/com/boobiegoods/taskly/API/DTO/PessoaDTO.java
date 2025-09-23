@@ -1,21 +1,31 @@
 package com.boobiegoods.taskly.API.DTO;
 
-import com.boobiegoods.taskly.Domain.Pessoa;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+public class PessoaDTO {
+    private int id;
+    private String nome;
 
-/**
- * DTO Record com validação para transferência de dados de Pessoa
- */
-public record PessoaDTO(
-    Integer id,
-    
-    @NotBlank(message = "Nome é obrigatório")
-    @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
-    String nome
-) {
-    // Constructor que recebe a entity Pessoa
-    public PessoaDTO(Pessoa pessoa) {
-        this(pessoa.getId(), pessoa.getNome());
+    // Construtor padrão
+    public PessoaDTO() {}
+
+    // Construtor cheio
+    public PessoaDTO(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
     }
+
+    // Getters e setters
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
 }
