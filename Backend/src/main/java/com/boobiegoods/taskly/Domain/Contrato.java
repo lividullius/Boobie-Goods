@@ -26,15 +26,15 @@ public class Contrato {
     @Column(name = "DataInicioContrato", nullable = false)
     private LocalDate dataInicioContrato;
 
-    @Column(name = "DataFimContrato", nullable = false)
+    // Fim do contrato pode ser aberto (null)
+    @Column(name = "DataFimContrato")
     private LocalDate dataFimContrato;
 
     @Column(name = "NumHoraSemanal", nullable = false)
-    private Integer numeroHorasSemana;
+    private int numeroHorasSemana;
 
-    // IMPORTANTE: usar BigDecimal para dinheiro
-    @Column(name = "ValorHora", nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorHora;
+    @Column(name = "SalarioHora", nullable = false, precision = 10, scale = 2)
+    private BigDecimal salarioHora;
 
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Alocacao> alocacoes = new HashSet<>();
@@ -43,17 +43,23 @@ public class Contrato {
     public Contrato() {}
 
     // Construtor completo
-    public Contrato(int idContrato, Pessoa pessoa, Perfil perfil, LocalDate dataInicioContrato, LocalDate dataFimContrato, Integer numeroHorasSemana, BigDecimal valorHora) {
+    public Contrato(int idContrato,
+                    Pessoa pessoa,
+                    Perfil perfil,
+                    LocalDate dataInicioContrato,
+                    LocalDate dataFimContrato,
+                    int numeroHorasSemana,
+                    BigDecimal salarioHora) {
         this.id = idContrato;
         this.pessoa = pessoa;
         this.perfil = perfil;
         this.dataInicioContrato = dataInicioContrato;
         this.dataFimContrato = dataFimContrato;
         this.numeroHorasSemana = numeroHorasSemana;
-        this.valorHora = valorHora;
+        this.salarioHora = salarioHora;
     }
 
-    // Getters e setters 
+    // Getters e setters
     public int getId() { return id; }
     public void setId(int idContrato) { this.id = idContrato; }
 
@@ -69,15 +75,16 @@ public class Contrato {
     public LocalDate getDataFimContrato() { return dataFimContrato; }
     public void setDataFimContrato(LocalDate dataFimContrato) { this.dataFimContrato = dataFimContrato; }
 
-    public Integer getNumeroHorasSemana() { return numeroHorasSemana; }
-    public void setNumeroHorasSemana(Integer numeroHorasSemana) { this.numeroHorasSemana = numeroHorasSemana; }
+    public int getNumeroHorasSemana() { return numeroHorasSemana; }
+    public void setNumeroHorasSemana(int numeroHorasSemana) { this.numeroHorasSemana = numeroHorasSemana; }
 
-    public BigDecimal getValorporHora() { return valorHora; }
-    public void setValorporHora(BigDecimal valorHora) { this.valorHora = valorHora; }
+    public BigDecimal getSalarioHora() { return salarioHora; }
+    public void setSalarioHora(BigDecimal salarioHora) { this.salarioHora = salarioHora; }
 
     public Set<Alocacao> getAlocacoes() { return alocacoes; }
     public void setAlocacoes(Set<Alocacao> alocacoes) { this.alocacoes = alocacoes; }
 
+    // Conveniência (se ainda houver código antigo chamando estes nomes)
     public LocalDate getDataInicio() { return dataInicioContrato; }
     public LocalDate getDataFim()    { return dataFimContrato; }
 }

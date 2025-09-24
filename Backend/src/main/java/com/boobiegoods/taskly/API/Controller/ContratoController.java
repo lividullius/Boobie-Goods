@@ -85,7 +85,7 @@ public class ContratoController {
         novoContrato.setDataInicioContrato(contratoDTO.getDataInicioContrato());
         novoContrato.setDataFimContrato(contratoDTO.getDataFimContrato());
         novoContrato.setNumeroHorasSemana(contratoDTO.getNumeroHorasSemana());
-        novoContrato.setValorporHora(contratoDTO.getValorporHora());
+        novoContrato.setSalarioHora(contratoDTO.getValorporHora());
         
         contratos.add(novoContrato);
         
@@ -152,7 +152,7 @@ public class ContratoController {
         BigDecimal horasDia = BigDecimal.valueOf(contrato.getNumeroHorasSemana())
                 .divide(BigDecimal.valueOf(7), 6, RoundingMode.HALF_UP);
 
-        BigDecimal custoTotal = contrato.getValorporHora()
+        BigDecimal custoTotal = contrato.getSalarioHora()
                 .multiply(horasDia)
                 .multiply(BigDecimal.valueOf(dias))
                 .setScale(2, RoundingMode.HALF_UP);
@@ -169,7 +169,7 @@ public class ContratoController {
         dto.setDataInicioContrato(contrato.getDataInicioContrato());
         dto.setDataFimContrato(contrato.getDataFimContrato());
         dto.setNumeroHorasSemana(contrato.getNumeroHorasSemana());
-        dto.setValorporHora(contrato.getValorporHora());
+        dto.setValorporHora(contrato.getSalarioHora());
         return dto;
     }
     
@@ -193,7 +193,7 @@ public class ContratoController {
         contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
         contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
         contrato1.setNumeroHorasSemana(40);
-        contrato1.setValorporHora(BigDecimal.valueOf(50));
+        contrato1.setSalarioHora(BigDecimal.valueOf(50));
         contratos.add(contrato1);
         
         Contrato contrato2 = new Contrato();
@@ -203,7 +203,7 @@ public class ContratoController {
         contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
         contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
         contrato2.setNumeroHorasSemana(30);
-        contrato2.setValorporHora(BigDecimal.valueOf(45));
+        contrato2.setSalarioHora(BigDecimal.valueOf(45));
         contratos.add(contrato2);
         
         Contrato contrato3 = new Contrato();
@@ -213,7 +213,7 @@ public class ContratoController {
         contrato3.setDataInicioContrato(LocalDate.of(2024, 6, 1));
         contrato3.setDataFimContrato(LocalDate.of(2024, 11, 30));
         contrato3.setNumeroHorasSemana(40);
-        contrato3.setValorporHora(BigDecimal.valueOf(80));
+        contrato3.setSalarioHora(BigDecimal.valueOf(80));
         contratos.add(contrato3);
     }
 }

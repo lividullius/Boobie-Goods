@@ -4,10 +4,12 @@ import com.boobiegoods.taskly.API.DTO.ProjetoDTO;
 import com.boobiegoods.taskly.API.Service.ProjetoService;
 import com.boobiegoods.taskly.Domain.Projeto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -86,21 +88,10 @@ public class ProjetoController {
     /**
      * GET /api/projetos/{id}/custo - Calcular custo geral do projeto
      */
-    @GetMapping("/{id}/custo")
-    public ResponseEntity<Double> calcularCustoProjeto(@PathVariable int id) {
-        Optional<Projeto> projetoOpt = projetoService.findById(id);
-        
-        if (projetoOpt.isPresent()) {
-            Projeto projeto = projetoOpt.get();
-            
-            // TODO: Implementar cálculo real baseado nas alocações
-            // Por enquanto retorna valor simulado
-            double custoTotal = 50000.0; // Custo total simulado
-            
-            return ResponseEntity.ok(custoTotal);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+   @GetMapping("/{id}/custo")
+    public ResponseEntity<BigDecimal> calcularCustoProjeto(@PathVariable int id) {
+        if (!projetoService.existsById(id)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(projetoService.calcularCustoGeralProjeto(id));
     }
     
     /**
@@ -108,23 +99,13 @@ public class ProjetoController {
      * Calcular custo por período específico
      */
     @GetMapping("/{id}/custo-periodo")
-    public ResponseEntity<Double> calcularCustoPorPeriodo(
+    public ResponseEntity<BigDecimal> calcularCustoPorPeriodo(
             @PathVariable int id,
-            @RequestParam LocalDate dataInicio,
-            @RequestParam LocalDate dataFim) {
-        
-        Optional<Projeto> projetoOpt = projetoService.findById(id);
-        
-        if (projetoOpt.isPresent()) {
-            // TODO: Implementar cálculo real baseado no período e alocações
-            // Por enquanto retorna valor simulado
-            double custoPeriodo = 15000.0; // Valor simulado
-            return ResponseEntity.ok(custoPeriodo);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
+        if (!projetoService.existsById(id)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(projetoService.calcularCustoProjetoNoPeriodo(id, dataInicio, dataFim));
     }
-    
     /**
      * GET /api/projetos/ativos - Listar projetos ativos
      */
