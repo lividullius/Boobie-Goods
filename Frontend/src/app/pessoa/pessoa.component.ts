@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModalCriacaoPessoaComponent } from '../modal-criacao-pessoa/modal-criacao-pessoa.component';
-import { ModalCriacaoPerfilComponent } from '../modal-criacao-perfil/modal-criacao-perfil.component';
+import { ModalCriacaoPessoaComponent } from './modal-criacao-pessoa/modal-criacao-pessoa.component';
+import { ModalCriacaoPerfilComponent } from './modal-criacao-perfil/modal-criacao-perfil.component';
 import { PessoaService, PessoaDTO } from '../services/pessoa.service';
 
 @Component({
@@ -10,7 +10,8 @@ import { PessoaService, PessoaDTO } from '../services/pessoa.service';
   standalone: true,
   imports: [CommonModule, HttpClientModule, ModalCriacaoPessoaComponent, ModalCriacaoPerfilComponent],
   templateUrl: './pessoa.component.html',
-  styleUrl: './pessoa.component.scss'
+  styleUrl: './pessoa.component.scss',
+  providers: [PessoaService]
 })
 export class PessoaComponent implements OnInit {
   pessoas: PessoaDTO[] = [];

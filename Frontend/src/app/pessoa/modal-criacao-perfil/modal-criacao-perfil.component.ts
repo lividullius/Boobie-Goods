@@ -1,32 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-type PessoaDTO = {
-  id?: number;
-  nome: string;
-  perfis: string[];
-};
+import { PessoaDTO, PessoaService } from '../../services/pessoa.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-modal-criacao-perfil',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, HttpClientModule],
   templateUrl: './modal-criacao-perfil.component.html',
-  styleUrl: './modal-criacao-perfil.component.scss'
+  styleUrl: './modal-criacao-perfil.component.scss',
+  providers: [PessoaService]
 })
-export class ModalCriacaoPerfilComponent {
+export class ModalCriacaoPerfilComponent implements OnInit {
   pessoaSelecionada: PessoaDTO | null = null;
   pessoaSelecionadaId: number | null = null;
   
-  // Lista de pessoas (deveria vir do serviço)
-  pessoas: PessoaDTO[] = [
-    { id: 1, nome: 'João Silva', perfis: ['Gerente', 'Developer'] },
-    { id: 2, nome: 'Maria Santos', perfis: ['Developer', 'QualityAnalyst'] },
-    { id: 3, nome: 'Pedro Oliveira', perfis: ['Security'] },
-    { id: 4, nome: 'Ana Costa', perfis: ['Gerente'] },
-    { id: 5, nome: 'Carlos Ferreira', perfis: ['Developer', 'Security'] }
-  ];
+  // Lista de pessoas
+  pessoas: PessoaDTO[] = [];
+  
+  constructor(private pessoaService: PessoaService) {}
+  
+  ngOnInit(): void {
+    this.carregarPessoas();
+  }
+  
+  carregarPessoas(): void {
+    this.pessoaService.getAllPessoasComPerfis().subscribe({
+      next: (data) => {
+        this.pessoas = data.map(p => ({
+          ...p,
+          perfis: p.perfis || []
+        }));
+      },
+      error: (error) => {
+        console.error('Erro ao carregar pessoas:', error);
+      }
+    });
+  }
 
   // Todos os perfis disponíveis
   perfisDisponiveis = [
@@ -57,7 +68,7 @@ export class ModalCriacaoPerfilComponent {
       };
 
       // Marcar perfis existentes da pessoa
-      if (this.pessoaSelecionada) {
+      if (this.pessoaSelecionada && this.pessoaSelecionada.perfis) {
         this.pessoaSelecionada.perfis.forEach(perfil => {
           this.perfisCheckbox[perfil] = true;
         });
@@ -68,13 +79,20 @@ export class ModalCriacaoPerfilComponent {
   }
 
   isPessoaTemPerfil(perfil: string): boolean {
-    return this.pessoaSelecionada?.perfis.includes(perfil) || false;
+    return this.pessoaSelecionada && this.pessoaSelecionada.perfis 
+      ? this.pessoaSelecionada.perfis.includes(perfil)
+      : false;
   }
 
   onSubmit(form: any) {
     if (!this.pessoaSelecionada) {
       alert('Por favor, selecione uma pessoa.');
       return;
+    }
+
+    // Garantir que o array de perfis exista
+    if (!this.pessoaSelecionada.perfis) {
+      this.pessoaSelecionada.perfis = [];
     }
 
     // Coletar novos perfis selecionados

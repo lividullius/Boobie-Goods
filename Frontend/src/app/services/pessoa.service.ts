@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export interface PessoaDTO {
   id?: number;
@@ -28,7 +29,15 @@ export class PessoaService {
 
   // Buscar todas as pessoas com seus perfis (versão simplificada)
   getAllPessoasComPerfis(): Observable<PessoaDTO[]> {
-    return this.getAllPessoas();
+    return this.http.get<PessoaDTO[]>(`${this.apiUrl}/com-perfis`).pipe(
+      catchError(error => {
+        console.error('Erro ao buscar pessoas com perfis:', error);
+        // Fallback para dados sem perfis
+        return this.getAllPessoas().pipe(
+          map(pessoas => pessoas.map(p => ({ ...p, perfis: [] })))
+        );
+      })
+    );
   }
 
   // Buscar pessoa por ID
