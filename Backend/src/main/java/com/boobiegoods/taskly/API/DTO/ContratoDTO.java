@@ -9,7 +9,7 @@ public class ContratoDTO {
     private LocalDate dataInicioContrato;
     private LocalDate dataFimContrato;
     private int numeroHorasSemana;
-    private double valorHora;
+    private int valorHora;
 
     public int getId() {
         return id;
@@ -53,10 +53,10 @@ public class ContratoDTO {
         this.numeroHorasSemana = numeroHorasSemana;
     }
 
-    public double getValorHora() {
+    public int getValorHora() {
         return valorHora;
     }
-    public void setValorHora(double valorHora) {
+    public void setValorHora(int valorHora) {
         this.valorHora = valorHora;
     }
 }

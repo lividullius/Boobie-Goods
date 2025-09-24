@@ -185,7 +185,7 @@ public class ContratoController {
         contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
         contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
         contrato1.setNumeroHorasSemana(40);
-        contrato1.setValorHora(50.0);
+        contrato1.setValorHora(50);
         contratos.add(contrato1);
         
         Contrato contrato2 = new Contrato();
@@ -195,7 +195,7 @@ public class ContratoController {
         contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
         contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
         contrato2.setNumeroHorasSemana(30);
-        contrato2.setValorHora(45.0);
+        contrato2.setValorHora(45);
         contratos.add(contrato2);
         
         Contrato contrato3 = new Contrato();
@@ -205,7 +205,7 @@ public class ContratoController {
         contrato3.setDataInicioContrato(LocalDate.of(2024, 6, 1));
         contrato3.setDataFimContrato(LocalDate.of(2024, 11, 30));
         contrato3.setNumeroHorasSemana(40);
-        contrato3.setValorHora(80.0);
+        contrato3.setValorHora(80);
         contratos.add(contrato3);
     }
 }

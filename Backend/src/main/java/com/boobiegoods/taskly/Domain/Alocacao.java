@@ -10,22 +10,22 @@ public class Alocacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDAlocacao")
-    int idAlocacao;
+    private int idAlocacao;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IDProjeto", nullable = false)
-    Projeto projeto;
+    private Projeto projeto;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IDContrato", nullable = false)
-    Contrato contrato;
+    private Contrato contrato;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IDPessoa", nullable = false)
-    Pessoa pessoa;
+    private Pessoa pessoa;
     
     @Column(name = "horaSemana", nullable = false)
-    int horasSemanal;
+    private int horasSemanal;
 
     // Construtor padrão (obrigatório para JPA)
     public Alocacao() {}

@@ -31,7 +31,7 @@ public class Contrato {
     private int numeroHorasSemana;
     
     @Column(name = "SalarioHora", nullable = false, precision = 10, scale = 2)
-    private double valorHora;
+    private int valorHora;
     
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Alocacao> alocacoes = new HashSet<>();
@@ -40,7 +40,7 @@ public class Contrato {
     public Contrato() {}
 
     // Construtor
-    public Contrato(int idContrato, Pessoa pessoa, Perfil perfil, LocalDate dataInicio, LocalDate dataFimContrato, int numeroHorasSemana, double valorHora) {
+    public Contrato(int idContrato, Pessoa pessoa, Perfil perfil, LocalDate dataInicio, LocalDate dataFimContrato, int numeroHorasSemana, int valorHora) {
         this.id = idContrato;
         this.pessoa = pessoa;
         this.perfil = perfil;
@@ -87,10 +87,10 @@ public class Contrato {
     public void setNumeroHorasSemana(int numeroHorasSemana) {
         this.numeroHorasSemana = numeroHorasSemana;
     }
-    public double getValorHora() {
+    public int getValorHora() {
         return valorHora;
     }
-    public void setValorHora(double valorHora) {
+    public void setValorHora(int valorHora) {
         this.valorHora = valorHora;
     }
     public Set<Alocacao> getAlocacoes() {
