@@ -1,12 +1,15 @@
 package com.boobiegoods.taskly.API.Controller;
 
 import com.boobiegoods.taskly.API.DTO.AlocacaoDTO;
+import com.boobiegoods.taskly.API.Service.AlocacaoService;
+import com.boobiegoods.taskly.API.Service.ProjetoService;
+import com.boobiegoods.taskly.API.Service.ContratoService;
+import com.boobiegoods.taskly.API.Service.PessoaService;
 import com.boobiegoods.taskly.Domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,16 +17,17 @@ import java.util.Optional;
 @RequestMapping("/api/alocacoes")
 public class AlocacaoController {
     
-    // Listas simuladas para desenvolvimento
-    private List<Alocacao> alocacoes = new ArrayList<>();
-    private List<Projeto> projetos = new ArrayList<>();
-    private List<Contrato> contratos = new ArrayList<>();
-    private List<Pessoa> pessoas = new ArrayList<>();
-    private int proximoId = 1;
-    
-    // Construtor para inicializar dados de exemplo
-    public AlocacaoController() {
-        inicializarDadosDeTeste();
+    private final AlocacaoService alocacaoService;
+    private final ProjetoService projetoService;
+    private final ContratoService contratoService;
+    private final PessoaService pessoaService;
+
+    //construtor
+    public AlocacaoController(AlocacaoService alocacaoService, ProjetoService projetoService, ContratoService contratoService, PessoaService pessoaService) {
+        this.alocacaoService = alocacaoService;
+        this.projetoService = projetoService;
+        this.contratoService = contratoService;
+        this.pessoaService = pessoaService;
     }
     
     /**
@@ -31,7 +35,7 @@ public class AlocacaoController {
      */
     @GetMapping
     public ResponseEntity<List<AlocacaoDTO>> listarTodasAlocacoes() {
-        List<AlocacaoDTO> alocacoesDTO = alocacoes.stream()
+        List<AlocacaoDTO> alocacoesDTO = alocacaoService.findAll().stream()
                 .map(this::converterParaDTO)
                 .toList();
         return ResponseEntity.ok(alocacoesDTO);
@@ -42,9 +46,7 @@ public class AlocacaoController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<AlocacaoDTO> buscarAlocacaoPorId(@PathVariable int id) {
-        Optional<Alocacao> alocacaoOpt = alocacoes.stream()
-                .filter(a -> a.getIdAlocacao() == id)
-                .findFirst();
+        Optional<Alocacao> alocacaoOpt = alocacaoService.findById(id);
         
         if (alocacaoOpt.isPresent()) {
             AlocacaoDTO alocacaoDTO = converterParaDTO(alocacaoOpt.get());
@@ -60,26 +62,22 @@ public class AlocacaoController {
     @PostMapping
     public ResponseEntity<AlocacaoDTO> criarAlocacao(@RequestBody AlocacaoDTO alocacaoDTO) {
         // Buscar projeto
-        Optional<Projeto> projetoOpt = projetos.stream()
-                .filter(p -> p.getId() == alocacaoDTO.getFkProjeto())
-                .findFirst();
+        Optional<Projeto> projetoOpt = projetoService.findById(alocacaoDTO.getFkProjeto());
         
         // Buscar contrato
-        Optional<Contrato> contratoOpt = contratos.stream()
-                .filter(c -> c.getId() == alocacaoDTO.getFkContrato())
-                .findFirst();
+        Optional<Contrato> contratoOpt = contratoService.findById(alocacaoDTO.getFkContrato());
         
         // Buscar pessoa
-        Optional<Pessoa> pessoaOpt = pessoas.stream()
-                .filter(p -> p.getId() == alocacaoDTO.getFkPessoa())
-                .findFirst();
+        Optional<Pessoa> pessoaOpt = pessoaService.findById(alocacaoDTO.getFkPessoa());
         
         if (projetoOpt.isEmpty() || contratoOpt.isEmpty() || pessoaOpt.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         
         // Validar se a pessoa já está alocada neste projeto
-        boolean jaAlocada = alocacoes.stream()
+        // Esta verificação precisará ser implementada no repositório ou serviço
+        List<Alocacao> alocacoesExistentes = alocacaoService.findAll();
+        boolean jaAlocada = alocacoesExistentes.stream()
                 .anyMatch(a -> a.getPessoa().getId() == alocacaoDTO.getFkPessoa() 
                           && a.getProjeto().getId() == alocacaoDTO.getFkProjeto());
         
@@ -88,13 +86,13 @@ public class AlocacaoController {
         }
         
         Alocacao novaAlocacao = new Alocacao();
-        novaAlocacao.setIdAlocacao(proximoId++);
+        // Não precisa definir ID, pois o banco de dados vai gerar
         novaAlocacao.setProjeto(projetoOpt.get());
         novaAlocacao.setContrato(contratoOpt.get());
         novaAlocacao.setPessoa(pessoaOpt.get());
         novaAlocacao.setHorasSemanal(alocacaoDTO.getHorasSemanal());
         
-        alocacoes.add(novaAlocacao);
+        novaAlocacao = alocacaoService.save(novaAlocacao);
         
         AlocacaoDTO alocacaoCriada = converterParaDTO(novaAlocacao);
         return ResponseEntity.ok(alocacaoCriada);
@@ -105,7 +103,7 @@ public class AlocacaoController {
      */
     @GetMapping("/projeto/{projetoId}")
     public ResponseEntity<List<AlocacaoDTO>> listarAlocacoesPorProjeto(@PathVariable int projetoId) {
-        List<AlocacaoDTO> alocacoesDTO = alocacoes.stream()
+        List<AlocacaoDTO> alocacoesDTO = alocacaoService.findAll().stream()
                 .filter(a -> a.getProjeto().getId() == projetoId)
                 .map(this::converterParaDTO)
                 .toList();
@@ -117,7 +115,7 @@ public class AlocacaoController {
      */
     @GetMapping("/pessoa/{pessoaId}")
     public ResponseEntity<List<AlocacaoDTO>> listarAlocacoesPorPessoa(@PathVariable int pessoaId) {
-        List<AlocacaoDTO> alocacoesDTO = alocacoes.stream()
+        List<AlocacaoDTO> alocacoesDTO = alocacaoService.findAll().stream()
                 .filter(a -> a.getPessoa().getId() == pessoaId)
                 .map(this::converterParaDTO)
                 .toList();
@@ -129,7 +127,7 @@ public class AlocacaoController {
      */
     @GetMapping("/contrato/{contratoId}")
     public ResponseEntity<List<AlocacaoDTO>> listarAlocacoesPorContrato(@PathVariable int contratoId) {
-        List<AlocacaoDTO> alocacoesDTO = alocacoes.stream()
+        List<AlocacaoDTO> alocacoesDTO = alocacaoService.findAll().stream()
                 .filter(a -> a.getContrato().getId() == contratoId)
                 .map(this::converterParaDTO)
                 .toList();
@@ -141,7 +139,7 @@ public class AlocacaoController {
      */
     @GetMapping("/projeto/{projetoId}/horas-totais")
     public ResponseEntity<Integer> calcularHorasTotaisProjeto(@PathVariable int projetoId) {
-        int horasTotais = alocacoes.stream()
+        int horasTotais = alocacaoService.findAll().stream()
                 .filter(a -> a.getProjeto().getId() == projetoId)
                 .mapToInt(Alocacao::getHorasSemanal)
                 .sum();
@@ -153,7 +151,7 @@ public class AlocacaoController {
      */
     @GetMapping("/pessoa/{pessoaId}/horas-totais")
     public ResponseEntity<Integer> calcularHorasTotaisPessoa(@PathVariable int pessoaId) {
-        int horasTotais = alocacoes.stream()
+        int horasTotais = alocacaoService.findAll().stream()
                 .filter(a -> a.getPessoa().getId() == pessoaId)
                 .mapToInt(Alocacao::getHorasSemanal)
                 .sum();
@@ -165,7 +163,7 @@ public class AlocacaoController {
      */
     @GetMapping("/validar-limite/{pessoaId}")
     public ResponseEntity<Boolean> validarLimiteHoras(@PathVariable int pessoaId) {
-        int horasTotais = alocacoes.stream()
+        int horasTotais = alocacaoService.findAll().stream()
                 .filter(a -> a.getPessoa().getId() == pessoaId)
                 .mapToInt(Alocacao::getHorasSemanal)
                 .sum();
@@ -182,72 +180,5 @@ public class AlocacaoController {
         dto.setFkPessoa(alocacao.getPessoa().getId());
         dto.setHorasSemanal(alocacao.getHorasSemanal());
         return dto;
-    }
-    
-    // Inicializar dados de teste
-    private void inicializarDadosDeTeste() {
-        // Criar pessoas de exemplo
-        pessoas.add(new Pessoa(1, "João Silva"));
-        pessoas.add(new Pessoa(2, "Maria Santos"));
-        pessoas.add(new Pessoa(3, "Pedro Oliveira"));
-        
-        // Criar projetos de exemplo
-        Projeto projeto1 = new Projeto();
-        projeto1.setId(1);
-        projeto1.setNomeProjeto("Sistema Web");
-        projeto1.setDataInicioProjeto(LocalDate.of(2024, 1, 1));
-        projeto1.setDataTerminoProjeto(LocalDate.of(2024, 12, 31));
-        projetos.add(projeto1);
-        
-        Projeto projeto2 = new Projeto();
-        projeto2.setId(2);
-        projeto2.setNomeProjeto("App Mobile");
-        projeto2.setDataInicioProjeto(LocalDate.of(2024, 3, 1));
-        projeto2.setDataTerminoProjeto(LocalDate.of(2024, 8, 31));
-        projetos.add(projeto2);
-        
-        // Criar contratos de exemplo
-        Contrato contrato1 = new Contrato();
-        contrato1.setId(1);
-        contrato1.setPessoa(pessoas.get(0));
-        contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
-        contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
-        contrato1.setNumeroHorasSemana(40);
-        contrato1.setValorHora(50);
-        contratos.add(contrato1);
-        
-        Contrato contrato2 = new Contrato();
-        contrato2.setId(2);
-        contrato2.setPessoa(pessoas.get(1));
-        contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
-        contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
-        contrato2.setNumeroHorasSemana(30);
-        contrato2.setValorHora(45);
-        contratos.add(contrato2);
-        
-        // Criar alocações de exemplo
-        Alocacao alocacao1 = new Alocacao();
-        alocacao1.setIdAlocacao(proximoId++);
-        alocacao1.setProjeto(projeto1);
-        alocacao1.setContrato(contrato1);
-        alocacao1.setPessoa(pessoas.get(0));
-        alocacao1.setHorasSemanal(25);
-        alocacoes.add(alocacao1);
-        
-        Alocacao alocacao2 = new Alocacao();
-        alocacao2.setIdAlocacao(proximoId++);
-        alocacao2.setProjeto(projeto2);
-        alocacao2.setContrato(contrato2);
-        alocacao2.setPessoa(pessoas.get(1));
-        alocacao2.setHorasSemanal(20);
-        alocacoes.add(alocacao2);
-        
-        Alocacao alocacao3 = new Alocacao();
-        alocacao3.setIdAlocacao(proximoId++);
-        alocacao3.setProjeto(projeto1);
-        alocacao3.setContrato(contrato2);
-        alocacao3.setPessoa(pessoas.get(1));
-        alocacao3.setHorasSemanal(10);
-        alocacoes.add(alocacao3);
     }
 }

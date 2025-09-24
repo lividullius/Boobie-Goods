@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'
-import { Pessoa } from '../models/pessoa';
+import { Pessoa } from '../../models/pessoa';
 
 @Component({
   selector: 'app-modal-criacao-pessoa',
