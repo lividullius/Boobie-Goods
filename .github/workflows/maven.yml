@@ -19,3 +19,4 @@ jobs:
         distribution: 'temurin'
     - name: Verify compilation
       run: mvn compile -DskipTests
+      working-directory: ./Backend
