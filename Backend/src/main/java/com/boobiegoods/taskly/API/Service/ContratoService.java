@@ -130,11 +130,11 @@ public class ContratoService {
 
         // Validar valor/hora (BigDecimal)
         
-        BigDecimal valor = contrato.getValorporHora();
+        BigDecimal valor = contrato.getSalarioHora();
             if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Valor por hora deve ser maior que zero");
             }
-            contrato.setValorporHora(valor.setScale(2, RoundingMode.HALF_UP));
+            contrato.setSalarioHora(valor.setScale(2, RoundingMode.HALF_UP));
 
             // Validar horas semanais
             if (contrato.getNumeroHorasSemana() <= 0 || contrato.getNumeroHorasSemana() > 40) {

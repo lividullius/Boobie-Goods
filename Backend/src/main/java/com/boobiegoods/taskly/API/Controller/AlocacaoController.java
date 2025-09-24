@@ -214,7 +214,7 @@ public class AlocacaoController {
         contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
         contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
         contrato1.setNumeroHorasSemana(40);
-        contrato1.setValorporHora(BigDecimal.valueOf(50));
+        contrato1.setSalarioHora(BigDecimal.valueOf(50));
         contratos.add(contrato1);
         
         Contrato contrato2 = new Contrato();
@@ -223,7 +223,7 @@ public class AlocacaoController {
         contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
         contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
         contrato2.setNumeroHorasSemana(30);
-        contrato2.setValorporHora(BigDecimal.valueOf(45));
+        contrato2.setSalarioHora(BigDecimal.valueOf(45));
         contratos.add(contrato2);
         
         // Criar alocações de exemplo
