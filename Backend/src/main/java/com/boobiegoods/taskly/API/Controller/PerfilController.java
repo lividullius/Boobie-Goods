@@ -1,6 +1,9 @@
 package com.boobiegoods.taskly.API.Controller;
 
 import com.boobiegoods.taskly.API.DTO.PerfilDTO;
+import com.boobiegoods.taskly.API.DTO.PessoaDTO;
+import com.boobiegoods.taskly.API.Service.PerfilService;
+import com.boobiegoods.taskly.API.Service.PessoaService;
 import com.boobiegoods.taskly.Domain.Perfil;
 import com.boobiegoods.taskly.Domain.TipoPerfil;
 import org.springframework.http.ResponseEntity;
@@ -13,36 +16,34 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/perfis")
 public class PerfilController {
-    
-    // Lista simulada para desenvolvimento
-    private List<Perfil> perfis = new ArrayList<>();
-    private int proximoId = 1;
-    
+
+    private final PerfilService perfilService;
+    private final PessoaService pessoaService;
+
     // Construtor para inicializar dados de exemplo
-    public PerfilController() {
-        inicializarDadosDeTeste();
+    public PerfilController(PerfilService perfilService, PessoaService pessoaService) {
+        this.perfilService = perfilService;
+        this.pessoaService = pessoaService;
     }
-    
+
     /**
      * GET /api/perfis - Listar todos os perfis
      */
     @GetMapping
     public ResponseEntity<List<PerfilDTO>> listarTodosPerfis() {
-        List<PerfilDTO> perfisDTO = perfis.stream()
+        List<PerfilDTO> perfisDTO = perfilService.findAll().stream()
                 .map(this::converterParaDTO)
                 .toList();
         return ResponseEntity.ok(perfisDTO);
     }
-    
+
     /**
      * GET /api/perfis/{id} - Buscar perfil por ID
      */
     @GetMapping("/{id}")
     public ResponseEntity<PerfilDTO> buscarPerfilPorId(@PathVariable int id) {
-        Optional<Perfil> perfilOpt = perfis.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst();
-        
+        Optional<Perfil> perfilOpt = perfilService.findById(id);
+
         if (perfilOpt.isPresent()) {
             PerfilDTO perfilDTO = converterParaDTO(perfilOpt.get());
             return ResponseEntity.ok(perfilDTO);
@@ -50,7 +51,7 @@ public class PerfilController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     /**
      * POST /api/perfis - Criar novo perfil
      */
@@ -58,18 +59,15 @@ public class PerfilController {
     public ResponseEntity<PerfilDTO> criarPerfil(@RequestBody PerfilDTO perfilDTO) {
         try {
             Perfil novoPerfil = new Perfil();
-            novoPerfil.setId(proximoId++);
             novoPerfil.setTipo(TipoPerfil.valueOf(perfilDTO.getTipo()));
-            
-            perfis.add(novoPerfil);
-            
-            PerfilDTO perfilCriado = converterParaDTO(novoPerfil);
-            return ResponseEntity.ok(perfilCriado);
+
+            Perfil salvo = perfilService.saveWithValidation(novoPerfil);
+            return ResponseEntity.ok(converterParaDTO(salvo));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(null);
         }
     }
-    
+
     /**
      * GET /api/perfis/tipos - Listar tipos de perfil disponíveis
      */
@@ -81,57 +79,46 @@ public class PerfilController {
         }
         return ResponseEntity.ok(tipos);
     }
-    
+
     /**
      * GET /api/perfis/{id}/pessoas - Listar pessoas com este perfil
      */
     @GetMapping("/{id}/pessoas")
-    public ResponseEntity<List<String>> listarPessoasComPerfil(@PathVariable int id) {
-        Optional<Perfil> perfilOpt = perfis.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst();
-        
-        if (perfilOpt.isPresent()) {
-            // TODO: Implementar busca real das pessoas com este perfil
-            List<String> pessoas = new ArrayList<>();
-            pessoas.add("João Silva");
-            pessoas.add("Maria Santos");
-            return ResponseEntity.ok(pessoas);
-        } else {
+    public ResponseEntity<List<PessoaDTO>> listarPessoasComPerfil(@PathVariable int id) {
+        List<PessoaDTO> pessoasDTO = pessoaService.findByPerfilId(id)
+                .stream()
+                .map(p -> new PessoaDTO(p.getId(), p.getNome()))
+                .toList();
+
+        if (pessoasDTO.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        return ResponseEntity.ok(pessoasDTO);
     }
-    
+
     /**
      * GET /api/perfis/tipo/{tipo} - Buscar perfis por tipo
      */
     @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<List<PerfilDTO>> buscarPerfisPorTipo(@PathVariable String tipo) {
-        try {
-            TipoPerfil tipoPerfil = TipoPerfil.valueOf(tipo);
-            List<PerfilDTO> perfisDoTipo = perfis.stream()
-                    .filter(p -> p.getTipo() == tipoPerfil)
-                    .map(this::converterParaDTO)
-                    .toList();
-            return ResponseEntity.ok(perfisDoTipo);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<PerfilDTO> buscarPerfilPorTipo(@PathVariable String tipo) {
+    try {
+
+        TipoPerfil tipoPerfil = TipoPerfil.valueOf(tipo.toUpperCase());
+        Optional<Perfil> perfilOpt = perfilService.findByTipo(tipoPerfil);
+
+        return perfilOpt
+                .map(perfil -> ResponseEntity.ok(new PerfilDTO(perfil.getId(), perfil.getTipo().toString())))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().build();
     }
-    
+}
+
     // Método auxiliar para converter Perfil para PerfilDTO
     private PerfilDTO converterParaDTO(Perfil perfil) {
-        PerfilDTO dto = new PerfilDTO();
-        dto.setId(perfil.getId());
-        dto.setTipo(perfil.getTipo().name());
+        PerfilDTO dto = new PerfilDTO(perfil.getId(), perfil.getTipo().name());
         return dto;
-    }
-    
-    // Inicializar dados de teste
-    private void inicializarDadosDeTeste() {
-        perfis.add(new Perfil(proximoId++, TipoPerfil.Developer));
-        perfis.add(new Perfil(proximoId++, TipoPerfil.QualityAnalyst));
-        perfis.add(new Perfil(proximoId++, TipoPerfil.Security));
-        perfis.add(new Perfil(proximoId++, TipoPerfil.Gerente));
     }
 }

@@ -43,4 +43,5 @@ public interface IPerfilRepository extends JpaRepository<Perfil, Integer> {
     //Buscar perfis de uma pessoa específica
     @Query("SELECT p FROM Perfil p JOIN p.pessoas pe WHERE pe.id = :pessoaId")
     List<Perfil> findByPessoaId(@Param("pessoaId") Integer pessoaId);
+
 }
