@@ -1,6 +1,7 @@
 package com.boobiegoods.taskly.API.Controller;
 
 import com.boobiegoods.taskly.API.DTO.ContratoDTO;
+import com.boobiegoods.taskly.API.Service.ContratoService;
 import com.boobiegoods.taskly.Domain.Contrato;
 import com.boobiegoods.taskly.Domain.Pessoa;
 import com.boobiegoods.taskly.Domain.Perfil;
@@ -17,17 +18,11 @@ import java.util.Optional;
 @RequestMapping("/api/contratos")
 public class ContratoController {
     
-    // Listas simuladas para desenvolvimento
-    private List<Contrato> contratos = new ArrayList<>();
-    private List<Pessoa> pessoas = new ArrayList<>();
-    private List<Perfil> perfis = new ArrayList<>();
-    private int proximoId = 1;
-    
+    private final ContratoService contratoService;
     // Construtor para inicializar dados de exemplo
-    public ContratoController() {
-        inicializarDadosDeTeste();
+    public ContratoController(ContratoService contratoService) {
+        this.contratoService = contratoService;
     }
-    
     /**
      * GET /api/contratos - Listar todos os contratos
      */
@@ -166,46 +161,5 @@ public class ContratoController {
     }
     
     // Inicializar dados de teste
-    private void inicializarDadosDeTeste() {
-        // Criar pessoas de exemplo
-        pessoas.add(new Pessoa(1, "João Silva"));
-        pessoas.add(new Pessoa(2, "Maria Santos"));
-        pessoas.add(new Pessoa(3, "Pedro Oliveira"));
-        
-        // Criar perfis de exemplo
-        perfis.add(new Perfil(1, TipoPerfil.Developer));
-        perfis.add(new Perfil(2, TipoPerfil.QualityAnalyst));
-        perfis.add(new Perfil(3, TipoPerfil.Gerente));
-        
-        // Criar contratos de exemplo
-        Contrato contrato1 = new Contrato();
-        contrato1.setId(proximoId++);
-        contrato1.setPessoa(pessoas.get(0));
-        contrato1.setPerfil(perfis.get(0));
-        contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
-        contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
-        contrato1.setNumeroHorasSemana(40);
-        contrato1.setValorHora(50);
-        contratos.add(contrato1);
-        
-        Contrato contrato2 = new Contrato();
-        contrato2.setId(proximoId++);
-        contrato2.setPessoa(pessoas.get(1));
-        contrato2.setPerfil(perfis.get(1));
-        contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
-        contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
-        contrato2.setNumeroHorasSemana(30);
-        contrato2.setValorHora(45);
-        contratos.add(contrato2);
-        
-        Contrato contrato3 = new Contrato();
-        contrato3.setId(proximoId++);
-        contrato3.setPessoa(pessoas.get(2));
-        contrato3.setPerfil(perfis.get(2));
-        contrato3.setDataInicioContrato(LocalDate.of(2024, 6, 1));
-        contrato3.setDataFimContrato(LocalDate.of(2024, 11, 30));
-        contrato3.setNumeroHorasSemana(40);
-        contrato3.setValorHora(80);
-        contratos.add(contrato3);
-    }
+    
 }
