@@ -8,7 +8,10 @@ import com.boobiegoods.taskly.Domain.TipoPerfil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +85,7 @@ public class ContratoController {
         novoContrato.setDataInicioContrato(contratoDTO.getDataInicioContrato());
         novoContrato.setDataFimContrato(contratoDTO.getDataFimContrato());
         novoContrato.setNumeroHorasSemana(contratoDTO.getNumeroHorasSemana());
-        novoContrato.setValorHora(contratoDTO.getValorHora());
+        novoContrato.setValorporHora(contratoDTO.getValorporHora());
         
         contratos.add(novoContrato);
         
@@ -131,25 +134,30 @@ public class ContratoController {
      * GET /api/contratos/{id}/custo-total - Calcular custo total do contrato
      */
     @GetMapping("/{id}/custo-total")
-    public ResponseEntity<Double> calcularCustoTotalContrato(@PathVariable int id) {
+    public ResponseEntity<BigDecimal> calcularCustoTotalContrato(@PathVariable int id) {
         Optional<Contrato> contratoOpt = contratos.stream()
                 .filter(c -> c.getId() == id)
                 .findFirst();
-        
-        if (contratoOpt.isPresent()) {
-            Contrato contrato = contratoOpt.get();
-            
-            // Calcular número de semanas entre data início e fim
-            long dias = contrato.getDataInicioContrato().datesUntil(contrato.getDataFimContrato().plusDays(1)).count();
-            double semanas = dias / 7.0;
-            
-            // Custo total = horas por semana * valor hora * número de semanas
-            double custoTotal = contrato.getNumeroHorasSemana() * contrato.getValorHora() * semanas;
-            
-            return ResponseEntity.ok(custoTotal);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+        if (contratoOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        Contrato contrato = contratoOpt.get();
+
+        LocalDate ini = contrato.getDataInicioContrato();
+        LocalDate fim = contrato.getDataFimContrato();
+
+        long dias = ChronoUnit.DAYS.between(ini, fim) + 1; // inclusivo
+
+        // horas/dia = horas/semana / 7
+        BigDecimal horasDia = BigDecimal.valueOf(contrato.getNumeroHorasSemana())
+                .divide(BigDecimal.valueOf(7), 6, RoundingMode.HALF_UP);
+
+        BigDecimal custoTotal = contrato.getValorporHora()
+                .multiply(horasDia)
+                .multiply(BigDecimal.valueOf(dias))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        return ResponseEntity.ok(custoTotal);
     }
     
     // Método auxiliar para converter Contrato para ContratoDTO
@@ -161,7 +169,7 @@ public class ContratoController {
         dto.setDataInicioContrato(contrato.getDataInicioContrato());
         dto.setDataFimContrato(contrato.getDataFimContrato());
         dto.setNumeroHorasSemana(contrato.getNumeroHorasSemana());
-        dto.setValorHora(contrato.getValorHora());
+        dto.setValorporHora(contrato.getValorporHora());
         return dto;
     }
     
@@ -185,7 +193,7 @@ public class ContratoController {
         contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
         contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
         contrato1.setNumeroHorasSemana(40);
-        contrato1.setValorHora(50);
+        contrato1.setValorporHora(BigDecimal.valueOf(50));
         contratos.add(contrato1);
         
         Contrato contrato2 = new Contrato();
@@ -195,7 +203,7 @@ public class ContratoController {
         contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
         contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
         contrato2.setNumeroHorasSemana(30);
-        contrato2.setValorHora(45);
+        contrato2.setValorporHora(BigDecimal.valueOf(45));
         contratos.add(contrato2);
         
         Contrato contrato3 = new Contrato();
@@ -205,7 +213,7 @@ public class ContratoController {
         contrato3.setDataInicioContrato(LocalDate.of(2024, 6, 1));
         contrato3.setDataFimContrato(LocalDate.of(2024, 11, 30));
         contrato3.setNumeroHorasSemana(40);
-        contrato3.setValorHora(80);
+        contrato3.setValorporHora(BigDecimal.valueOf(80));
         contratos.add(contrato3);
     }
 }
