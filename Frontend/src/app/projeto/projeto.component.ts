@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule, DatePipe, NgForOf } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { ProjetoService } from '../services/projeto.service';
+import { Projeto } from '../models/projeto';
 
 declare const bootstrap: any; 
 
@@ -20,13 +22,18 @@ type ProjetoDTO = {
   imports: [CommonModule, ReactiveFormsModule, NgForOf, DatePipe],
 })
 export class ProjetoComponent {
-  projetos: ProjetoDTO[] = [
-    { nome: 'Exemplo de Projeto', dataInicio: '2024-01-01', dataFim: '2024-12-31', descricao: 'Descrição 1' },
+
+  projetos: Projeto[] = [
+    { id: 1, nomeProjeto: 'Exemplo de Projeto', dataInicioProjeto: new Date(2025, 2, 23), dataTerminoProjeto: new Date(2025, 2, 26), descricaoProjeto: 'Descrição 1' },
   ];
+
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, 
+    private projetoService: ProjetoService
+  ) 
+  {
     this.form = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(100)]],
       dataInicio: ['', Validators.required],
@@ -35,8 +42,14 @@ export class ProjetoComponent {
     });
   }
 
+  ngOnInit() {
+      /* this.projetoService.listarProjetos().subscribe(projetos => {
+      this.projetos = projetos; // aqui sim você atribui os dados reais
+    }); */
+  }
+
   salvar() {
-    if (this.form.invalid) {
+    /* if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
@@ -51,6 +64,6 @@ export class ProjetoComponent {
       instance.hide();
     }
 
-    this.form.reset();
+    this.form.reset(); */
   }
 }

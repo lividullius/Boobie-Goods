@@ -25,10 +25,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let p of projetos">
-            <td>{{ p.nome }}</td>
-            <td>{{ p.dataInicio | date:'dd/MM/yyyy' }}</td>
-            <td>{{ p.dataFim    | date:'dd/MM/yyyy' }}</td>
-            <td>{{ p.descricao }}</td>
+            <td>{{ p.nomeProjeto }}</td>
+            <td>{{ p.dataInicioProjeto | date:'dd/MM/yyyy' }}</td>
+            <td>{{ p.dataTerminoProjeto    | date:'dd/MM/yyyy' }}</td>
+            <td>{{ p.descricaoProjeto }}</td>
           </tr>
           <tr *ngIf="!projetos?.length">
             <td colspan="4" class="text-center text-muted py-4">
