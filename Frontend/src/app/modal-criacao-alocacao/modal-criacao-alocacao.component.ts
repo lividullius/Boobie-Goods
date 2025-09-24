@@ -20,6 +20,7 @@ export class ModalCriacaoAlocacaoComponent implements OnInit {
   pessoaSelecionadaId: number | null = null;
   projetoSelecionado: Projeto | null = null;
   projetoSelecionadoId: number | null = null;
+  horasSemanal: number = 20; // valor padrão de 20 horas por semana
   
   // Listas
   pessoas: PessoaDTO[] = [];
@@ -102,9 +103,18 @@ export class ModalCriacaoAlocacaoComponent implements OnInit {
       return;
     }
 
+    if (!this.horasSemanal || this.horasSemanal <= 0 || this.horasSemanal > 40) {
+      alert('Por favor, insira um valor válido para horas semanais (entre 1 e 40).');
+      return;
+    }
+
+    // Mapeamos para os nomes dos campos que o backend espera
     const novaAlocacao: AlocacaoDTO = {
       pessoaId: Number(this.pessoaSelecionadaId),
-      projetoId: Number(this.projetoSelecionadoId)
+      projetoId: Number(this.projetoSelecionadoId),
+      horasSemanal: this.horasSemanal,
+      fkPessoa: Number(this.pessoaSelecionadaId),
+      fkProjeto: Number(this.projetoSelecionadoId)
     };
 
     this.alocacaoService.criarAlocacao(novaAlocacao).subscribe({

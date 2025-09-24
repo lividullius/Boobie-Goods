@@ -4,9 +4,13 @@ import { Observable } from 'rxjs';
 
 export interface AlocacaoDTO {
   id?: number;
-  pessoaId: number;
-  projetoId: number;
-  perfil?: string; // opcional, dependendo de como a alocação é armazenada
+  pessoaId: number;  // Mapeado para fkPessoa no backend
+  projetoId: number; // Mapeado para fkProjeto no backend
+  perfil?: string;   // opcional, dependendo de como a alocação é armazenada
+  horasSemanal?: number; // horas por semana de alocação
+  fkPessoa?: number; // Usado quando recebendo do backend
+  fkProjeto?: number; // Usado quando recebendo do backend
+  fkContrato?: number; // Usado quando recebendo do backend
 }
 
 @Injectable({

@@ -59,6 +59,24 @@
               Não há projetos disponíveis para alocação desta pessoa
             </small>
           </div>
+          
+          <!-- Horas Semanais -->
+          <div class="mb-4">
+            <label for="horasSemanal" class="form-label">Horas por semana:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="horasSemanal"
+              name="horasSemanal"
+              [(ngModel)]="horasSemanal"
+              min="1"
+              max="40"
+              required
+            >
+            <small class="text-muted">
+              Defina a quantidade de horas semanais (máximo 40 horas)
+            </small>
+          </div>
         </div>
 
         <div class="modal-footer">

@@ -189,8 +189,11 @@ public class AlocacaoController {
      */
     @GetMapping("/verificar/{pessoaId}/{projetoId}")
     public ResponseEntity<Boolean> verificarAlocacao(@PathVariable int pessoaId, @PathVariable int projetoId) {
-        // Por enquanto, vamos sempre retornar falso (não está alocado)
-        // Em uma implementação real, isso verificaria no banco de dados
-        return ResponseEntity.ok(false);
+        // Verificar se já existe alocação para essa pessoa e projeto
+        List<Alocacao> alocacoesExistentes = alocacaoService.findAll();
+        boolean jaAlocada = alocacoesExistentes.stream()
+                .anyMatch(a -> a.getPessoa().getId() == pessoaId && a.getProjeto().getId() == projetoId);
+                
+        return ResponseEntity.ok(jaAlocada);
     }
 }
