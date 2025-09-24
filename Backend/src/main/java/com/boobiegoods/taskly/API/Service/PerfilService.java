@@ -34,6 +34,7 @@ public class PerfilService {
     public void deleteById(Integer id) {
         perfilRepository.deleteById(id);
     }
+
     //Verificar se perfil existe
     public boolean existsById(Integer id) {
         return perfilRepository.existsById(id);
@@ -83,6 +84,7 @@ public class PerfilService {
     public List<Perfil> findByPessoaId(Integer pessoaId) {
         return perfilRepository.findByPessoaId(pessoaId);
     }
+    
 
     //Salvar com validação de regras de negócio
     public Perfil saveWithValidation(Perfil perfil) {
