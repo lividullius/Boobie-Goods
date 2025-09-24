@@ -103,7 +103,6 @@ export class ModalCriacaoPerfilComponent implements OnInit {
     console.log('Perfis existentes:', this.pessoaSelecionada.perfis);
     console.log('Novos perfis adicionados:', novosPerfis);
 
-    // Aqui você enviaria para o backend
     // Atualizar localmente para demonstração
     if (novosPerfis.length > 0) {
       this.pessoaSelecionada.perfis.push(...novosPerfis);

@@ -8,6 +8,7 @@ import com.boobiegoods.taskly.API.Service.PessoaService;
 import com.boobiegoods.taskly.Domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/alocacoes")
+@CrossOrigin(origins = "*")
 public class AlocacaoController {
     
     private final AlocacaoService alocacaoService;
@@ -180,5 +182,15 @@ public class AlocacaoController {
         dto.setFkPessoa(alocacao.getPessoa().getId());
         dto.setHorasSemanal(alocacao.getHorasSemanal());
         return dto;
+    }
+    
+    /**
+     * GET /api/alocacoes/verificar/{pessoaId}/{projetoId} - Verificar se pessoa já está alocada no projeto
+     */
+    @GetMapping("/verificar/{pessoaId}/{projetoId}")
+    public ResponseEntity<Boolean> verificarAlocacao(@PathVariable int pessoaId, @PathVariable int projetoId) {
+        // Por enquanto, vamos sempre retornar falso (não está alocado)
+        // Em uma implementação real, isso verificaria no banco de dados
+        return ResponseEntity.ok(false);
     }
 }

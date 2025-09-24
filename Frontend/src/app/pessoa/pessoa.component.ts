@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalCriacaoPessoaComponent } from './modal-criacao-pessoa/modal-criacao-pessoa.component';
 import { ModalCriacaoPerfilComponent } from './modal-criacao-perfil/modal-criacao-perfil.component';
+import { ModalCriacaoAlocacaoComponent } from '../modal-criacao-alocacao/modal-criacao-alocacao.component';
 import { PessoaService, PessoaDTO } from '../services/pessoa.service';
 
 @Component({
   selector: 'app-pessoa',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ModalCriacaoPessoaComponent, ModalCriacaoPerfilComponent],
+  imports: [CommonModule, HttpClientModule, ModalCriacaoPessoaComponent, ModalCriacaoPerfilComponent, ModalCriacaoAlocacaoComponent],
   templateUrl: './pessoa.component.html',
   styleUrl: './pessoa.component.scss',
   providers: [PessoaService]

@@ -148,4 +148,18 @@ public class ProjetoController {
                 .toList();
         return ResponseEntity.ok(projetosDTO);
     }
+    
+    /**
+     * GET /api/projetos/nao-alocados/{pessoaId} - Buscar projetos onde a pessoa não está alocada
+     */
+    @GetMapping("/nao-alocados/{pessoaId}")
+    public ResponseEntity<List<ProjetoDTO>> listarProjetosNaoAlocados(@PathVariable int pessoaId) {
+        // Por enquanto, vamos retornar todos os projetos
+        // Em uma implementação real, isso filtraria com base nas alocações existentes
+        List<Projeto> projetos = projetoService.findAll();
+        List<ProjetoDTO> projetosDTO = projetos.stream()
+                .map(this::converterParaDTO)
+                .toList();
+        return ResponseEntity.ok(projetosDTO);
+    }
 }

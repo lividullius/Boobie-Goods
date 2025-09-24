@@ -1,0 +1,78 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modalAlocacao"
+  tabindex="-1"
+  aria-labelledby="modalAlocacaoLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAlocacaoLabel">Criar Alocação</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <form (ngSubmit)="onSubmit(formAlocacao)" #formAlocacao="ngForm">
+        <div class="modal-body">
+          <!-- Seleção de Pessoa -->
+          <div class="mb-4">
+            <label for="selectPessoa" class="form-label">Selecione a pessoa:</label>
+            <select
+              class="form-select"
+              id="selectPessoa"
+              name="pessoaId"
+              [(ngModel)]="pessoaSelecionadaId"
+              (change)="onPessoaChange()"
+              required
+            >
+              <option value="">-- Selecione uma pessoa --</option>
+              <option *ngFor="let pessoa of pessoas" [value]="pessoa.id">
+                {{ pessoa.nome }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Seleção de Projeto -->
+          <div class="mb-4">
+            <label for="selectProjeto" class="form-label">Selecione o projeto:</label>
+            <select
+              class="form-select"
+              id="selectProjeto"
+              name="projetoId"
+              [(ngModel)]="projetoSelecionadoId"
+              (change)="onProjetoChange()"
+              required
+              [disabled]="!pessoaSelecionadaId"
+            >
+              <option value="">-- Selecione um projeto --</option>
+              <option *ngFor="let projeto of projetosDisponiveis" [value]="projeto.id">
+                {{ projeto.nomeProjeto }}
+              </option>
+            </select>
+            <small class="text-muted" *ngIf="pessoaSelecionadaId && projetosDisponiveis.length === 0">
+              Não há projetos disponíveis para alocação desta pessoa
+            </small>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="!pessoaSelecionadaId || !projetoSelecionadoId">
+            Salvar Alocação
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
