@@ -4,12 +4,13 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { ModalCriarProjetoComponent } from './projeto/modal-criar-projeto/modal-criar-projeto.component';
 import { ModalCriacaoPessoaComponent } from "./modal-criacao-pessoa/modal-criacao-pessoa.component";
+import { ModalCriacaoPerfilComponent } from "./modal-criacao-perfil/modal-criacao-perfil.component";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, MainpageComponent, ModalCriacaoPessoaComponent, ModalCriarProjetoComponent],
+  imports: [RouterOutlet, NavbarComponent, MainpageComponent, ModalCriacaoPessoaComponent, ModalCriacaoPerfilComponent, ModalCriarProjetoComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
