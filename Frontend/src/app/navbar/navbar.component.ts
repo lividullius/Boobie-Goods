@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ModalContratoComponent } from '../contrato/modalcontrato/modalcontrato.component'
+import { ModalContratoComponent } from '../contrato/modal-criar-contrato/modal-criacao-contrato.component'
 import { RouterLink } from "@angular/router";
 
 @Component({

@@ -1,15 +1,8 @@
-.app-container {
-  display: flex;
+.grid-container {
+  margin-left: 400px;
+  padding: 50px;
 }
 
-.content {
-  margin-left: 220px;  
-  padding: 20px;
-  flex: 1;
-
-  display: flex;
-  justify-content: center; 
-  align-items: center;     
-  height: 100vh;           
-  box-sizing: border-box;
+app-navbar {
+  width: 250px; 
 }

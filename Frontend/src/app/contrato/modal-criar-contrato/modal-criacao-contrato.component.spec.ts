@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModalContratoComponent } from './modalcontrato.component';
+import { ModalContratoComponent } from './modal-criacao-contrato.component';
 
 describe('ModalContratoComponent', () => {
   let component: ModalContratoComponent;

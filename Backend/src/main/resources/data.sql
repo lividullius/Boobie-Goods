@@ -4,18 +4,28 @@
 
 -- Perfis
 INSERT INTO Perfil (Tipo) VALUES ('Gerente');
-INSERT INTO Perfil (Tipo) VALUES ('Dev');
-INSERT INTO Perfil (Tipo) VALUES ('QA');
+INSERT INTO Perfil (Tipo) VALUES ('Developer');
+INSERT INTO Perfil (Tipo) VALUES ('QualityAnalyst');
 INSERT INTO Perfil (Tipo) VALUES ('Security');
 
--- Pessoas
-INSERT INTO Pessoa (Nome, IDPerfil) VALUES ('Ana Souza', 1);   -- Gerente
-INSERT INTO Pessoa (Nome, IDPerfil) VALUES ('Carlos Lima', 2); -- Dev
-INSERT INTO Pessoa (Nome, IDPerfil) VALUES ('Fernanda Alves', 2); -- Dev
-INSERT INTO Pessoa (Nome, IDPerfil) VALUES ('Rafael Costa', 3);   -- QA
-INSERT INTO Pessoa (Nome, IDPerfil) VALUES ('Juliana Torres', 4); -- Security
+-- Pessoas (sem IDPerfil - agora é N:N)
+INSERT INTO Pessoa (Nome) VALUES ('Ana Souza');
+INSERT INTO Pessoa (Nome) VALUES ('Carlos Lima');
+INSERT INTO Pessoa (Nome) VALUES ('Fernanda Alves');
+INSERT INTO Pessoa (Nome) VALUES ('Rafael Costa');
+INSERT INTO Pessoa (Nome) VALUES ('Juliana Torres');
 
--- Contratos (agora com DataFimContrato obrigatória)
+-- Relacionamento N:N Pessoa-Perfil
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (1, 1); -- Ana: Gerente
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (2, 2); -- Carlos: Developer
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (3, 2); -- Fernanda: Developer
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (4, 3); -- Rafael: QA
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (5, 4); -- Juliana: Security
+-- Exemplo de pessoa com múltiplos perfis
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (2, 4); -- Carlos: Developer + Security
+INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (4, 2); -- Rafael: QA + Developer
+
+-- Contratos
 INSERT INTO Contrato (IDPessoa, IDPerfil, DataInicioContrato, DataFimContrato, NumHoraSemanal, SalarioHora)
 VALUES (1, 1, '2025-01-01', '2025-12-31', 40, 150.00);
 
@@ -38,15 +48,15 @@ VALUES ('Plataforma Financeira', '2025-02-01', NULL, 'Sistema para controle de i
 INSERT INTO Projeto (Nome, DataInicioProj, DataFimProj, Descricao)
 VALUES ('App Mobile Vendas', '2025-03-01', NULL, 'Aplicativo de vendas online.');
 
--- Alocações
+-- Alocações (agora com IDPessoa)
 -- Projeto 1
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (1, 1, 20); -- Gerente
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (1, 2, 25); -- Dev
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (1, 3, 15); -- Dev
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (1, 4, 20); -- QA
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (1, 5, 10); -- Security
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 1, 1, 20); -- Ana Gerente
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 2, 2, 25); -- Carlos Dev
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 3, 3, 15); -- Fernanda Dev
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 4, 4, 20); -- Rafael QA
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 5, 5, 10); -- Juliana Security
 
 -- Projeto 2
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (2, 1, 15); -- Gerente
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (2, 2, 20); -- Dev
-INSERT INTO Alocacao (IDProjeto, IDContrato, horaSemana) VALUES (2, 4, 15); -- QA
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (2, 1, 1, 15); -- Ana Gerente
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (2, 2, 2, 20); -- Carlos Dev
+INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (2, 4, 4, 15); -- Rafael QA
