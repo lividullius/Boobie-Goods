@@ -4,6 +4,11 @@ public class PessoaDTO {
     private int id;
     private String nome;
 
+    public PessoaDTO(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
     // Getters e setters
     public int getId() {
         return id;

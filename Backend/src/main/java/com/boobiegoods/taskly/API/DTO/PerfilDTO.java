@@ -4,6 +4,11 @@ public class PerfilDTO {
     private int id;
     private String tipo; 
 
+    public PerfilDTO(int id, String tipo){
+        this.id = id;
+        this.tipo = tipo;
+    }
+
     // Getters e setters
     public int getId() {
         return id;
