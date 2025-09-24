@@ -1,0 +1,71 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+ 
+ <div class="modal fade" id="modalCriarContrato" tabindex="-1" aria-labelledby="modalCriarContratoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCriarContratoLabel">Criar Contrato</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form>
+        <div class="modal-body">
+
+          <div class="mb-3" required>
+            <label for="selectPessoa" class="form-label">Selecionar Pessoa</label>
+            <select class="form-select" id="selectPessoa" >
+              <option selected disabled>Escolha uma pessoa</option>
+              <option>Julia</option>
+              <option>Livia</option>
+              <option>Marcela</option>
+              <option>Mariana</option>
+            </select>
+          </div>
+
+          <div class="mb-3" required>
+            <label for="selectPerfil" class="form-label">Selecionar Perfil</label>
+            <select class="form-select" id="selectPerfil">
+              <option selected disabled>Escolha um perfil</option>
+              <option>Dev</option>
+              <option>QA</option>
+              <option>Gerente</option>
+              <option>Security</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="dataInicio" class="form-label">Data de Início</label>
+              <input type="date" class="form-control" id="dataInicio" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="dataFim" class="form-label">Data de Fim</label>
+              <input type="date" class="form-control" id="dataFim">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="horasSemana" class="form-label">Horas Semanais</label>
+              <input type="number" class="form-control" id="horasSemana" placeholder="Ex: 40" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="salarioHora" class="form-label">Salário por Hora (R$)</label>
+              <input type="number" class="form-control" id="salarioHora" placeholder="Ex: 50" step="0.01" required>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Contrato</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

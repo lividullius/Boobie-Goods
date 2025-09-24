@@ -1,12 +1,8 @@
 .grid-container {
-  display: grid;
-  height: 100vh;
-  /* Defines a grid with two columns: a fixed-width one and one that takes up the rest of the space */
-  grid-template-columns: 800px 1fr; 
+  margin-left: 400px;
+  padding: 50px;
 }
 
-app-main-content {
-  
-  display: grid;
-  place-items: center;
+app-navbar {
+  width: 250px; 
 }

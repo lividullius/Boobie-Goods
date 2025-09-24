@@ -1,18 +1,16 @@
-/* ocupa a área útil e centraliza o conteúdo */
 .page {
-  min-height: calc(100vh - 80px); /* ajuste se tiver navbar fixa */
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
-  align-items: center;            /* <-- centraliza horizontalmente */
+  align-items: center;            
   padding: 24px 16px;
 }
 
-/* título + botão alinhados e centralizados dentro da largura */
 .header {
-  width: min(1100px, 92vw);       /* largura máxima */
+  width: min(1100px, 92vw);      
   display: flex;
   align-items: center;
-  justify-content: space-between; /* título à esquerda, botão à direita */
+  justify-content: space-between;
   margin-bottom: 16px;
 
   h2 {
@@ -21,17 +19,16 @@
   }
 }
 
-/* card/área da tabela centralizada */
 .table-wrap {
-  width: min(1100px, 92vw);       /* mesma largura do header */
-  background: #FCE7D2;            /* paleta (bege) – opcional */
+  width: min(1100px, 92vw);       
+  background: #FCE7D2;            
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  overflow: auto;                 /* scroll se a tabela ficar larga */
+  overflow: auto;                
 }
 
-/* estilização básica de tabela (se não estiver usando Material Table) */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -45,7 +42,18 @@ th {
   font-weight: 700;
 }
 
-/* deixa o botão na cor principal da sua paleta */
 :host ::ng-deep .mat-mdc-raised-button.mat-primary {
-  background: #EB5874; /* rosa da paleta */
+  background: #EB5874;
+}
+
+
+
+button:hover{
+    background-color: #ECECEC;
+}
+
+.criar-contrato-button {
+    background-color: #C6D9BA;
+    margin: 30px;
+
 }
