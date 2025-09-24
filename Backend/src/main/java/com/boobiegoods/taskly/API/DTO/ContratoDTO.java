@@ -1,5 +1,6 @@
 package com.boobiegoods.taskly.API.DTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ContratoDTO {
@@ -9,7 +10,7 @@ public class ContratoDTO {
     private LocalDate dataInicioContrato;
     private LocalDate dataFimContrato;
     private int numeroHorasSemana;
-    private int valorHora;
+    private BigDecimal valorporHora;  // mantido para compatibilidade
 
     public int getId() {
         return id;
@@ -53,10 +54,10 @@ public class ContratoDTO {
         this.numeroHorasSemana = numeroHorasSemana;
     }
 
-    public int getValorHora() {
-        return valorHora;
+    public BigDecimal getValorporHora() { return valorporHora; }
+    public void setValorporHora(BigDecimal valorHora) { this.valorporHora = valorHora; }
+
     }
-    public void setValorHora(int valorHora) {
-        this.valorHora = valorHora;
-    }
-}
+
+
+

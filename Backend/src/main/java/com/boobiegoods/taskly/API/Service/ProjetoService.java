@@ -1,19 +1,29 @@
 package com.boobiegoods.taskly.API.Service;
 
 import com.boobiegoods.taskly.Data.Repository.ProjetoRepository;
+import com.boobiegoods.taskly.Data.Repository.AlocacaoRepository;
+import com.boobiegoods.taskly.Domain.Alocacao;
+import com.boobiegoods.taskly.Domain.Contrato;
 import com.boobiegoods.taskly.Domain.Projeto;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class ProjetoService {
     
     @Autowired
     private ProjetoRepository projetoRepository;
+
+    @Autowired
+    private AlocacaoRepository alocacaoRepository;
     
     /* Buscar todos os projetos */
     public List<Projeto> findAll() {
@@ -109,4 +119,78 @@ public class ProjetoService {
         
         return save(projeto);
     }
+
+     /*CÁLCULO DE CUSTO */
+
+    /** Custo geral usando o próprio período do projeto. */
+    public BigDecimal calcularCustoGeralProjeto(Integer projetoId) {
+        Projeto p = projetoRepository.findById(projetoId)
+            .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado"));
+
+        LocalDate ini = p.getDataInicioProjeto();
+        LocalDate fim = p.getDataTerminoProjeto();
+        if (ini == null || fim == null || fim.isBefore(ini)) {
+            throw new IllegalArgumentException("Período do projeto inválido");
+        }
+        return calcularCustoProjetoNoPeriodo(projetoId, ini, fim);
+    }
+
+    /** 
+     * Custo por período: para cada alocação que intersecta o período,
+     * somar salárioHora × (horasSemanal/7) × nºDias (interseção de Período ∩ Alocação ∩ Contrato).
+     */
+    public BigDecimal calcularCustoProjetoNoPeriodo(Integer projetoId, LocalDate inicio, LocalDate fim) {
+        if (inicio == null || fim == null || fim.isBefore(inicio)) {
+            throw new IllegalArgumentException("Período inválido");
+        }
+
+        List<Alocacao> alocacoes = alocacaoRepository
+            .findByProjetoAndPeriodoOverlapFetchContrato(projetoId, inicio, fim);
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (Alocacao a : alocacoes) {
+            Contrato c = a.getContrato();
+            if (c == null || c.getValorporHora() == null) continue;
+
+            // (Período pedido) ∩ (Alocação) ∩ (Contrato)
+            LocalDate aIni = a.getDataInicio();
+            LocalDate aFim = (a.getDataFim() == null) ? fim : a.getDataFim();
+
+            LocalDate effIni = max3(inicio, aIni, c.getDataInicio());
+            LocalDate effFim = min3(fim, aFim, c.getDataFim());
+
+            if (effIni == null || effFim == null || effIni.isAfter(effFim)) continue;
+
+            Integer horasSemanal = a.getHorasSemanal();
+            if (horasSemanal == null || horasSemanal <= 0) continue;
+
+            long dias = ChronoUnit.DAYS.between(effIni, effFim) + 1; 
+            BigDecimal horasDia = BigDecimal.valueOf(horasSemanal)
+                    .divide(BigDecimal.valueOf(7), 6, RoundingMode.HALF_UP);
+
+            BigDecimal custo = c.getValorporHora()
+                    .multiply(horasDia)
+                    .multiply(BigDecimal.valueOf(dias));
+
+            total = total.add(custo);
+        }
+        return total;
+    }
+
+    /* Helpers de datas */
+    private static LocalDate max(LocalDate a, LocalDate b) {
+        if (a == null) return b;
+        if (b == null) return a;
+        return a.isAfter(b) ? a : b;
+    }
+
+    private static LocalDate min(LocalDate a, LocalDate b) {
+        if (a == null) return b;
+        if (b == null) return a;
+        return a.isBefore(b) ? a : b;
+    }
+
+    private static LocalDate max3(LocalDate a, LocalDate b, LocalDate c) { return max(max(a,b), c); }
+    private static LocalDate min3(LocalDate a, LocalDate b, LocalDate c) { return min(min(a,b), c); }
 }

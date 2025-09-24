@@ -5,6 +5,8 @@ import com.boobiegoods.taskly.Domain.Contrato;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -117,30 +119,36 @@ public class ContratoService {
 
     // Salvar com validação de regras de negócio
     public Contrato saveWithValidation(Contrato contrato) {
-        // Validar datas
+
+    // Validar campos obrigatórios de data
+        if (contrato.getDataInicioContrato() == null || contrato.getDataFimContrato() == null) {
+            throw new IllegalArgumentException("Datas de início e fim são obrigatórias");
+        }
         if (contrato.getDataInicioContrato().isAfter(contrato.getDataFimContrato())) {
             throw new IllegalArgumentException("Data de início não pode ser posterior à data de fim");
         }
+
+        // Validar valor/hora (BigDecimal)
         
-        // Validar valor hora
-        if (contrato.getValorHora() <= 0) {
-            throw new IllegalArgumentException("Valor por hora deve ser maior que zero");
-        }
-        
-        // Validar horas semanais
-        if (contrato.getNumeroHorasSemana() <= 0 || contrato.getNumeroHorasSemana() > 40) {
-            throw new IllegalArgumentException("Número de horas semanais deve estar entre 1 e 40");
-        }
-        
-        // Validar pessoa e perfil
-        if (contrato.getPessoa() == null) {
-            throw new IllegalArgumentException("Pessoa é obrigatória");
-        }
-        
-        if (contrato.getPerfil() == null) {
-            throw new IllegalArgumentException("Perfil é obrigatório");
-        }
-        
-        return save(contrato);
+        BigDecimal valor = contrato.getValorporHora();
+            if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Valor por hora deve ser maior que zero");
+            }
+            contrato.setValorporHora(valor.setScale(2, RoundingMode.HALF_UP));
+
+            // Validar horas semanais
+            if (contrato.getNumeroHorasSemana() <= 0 || contrato.getNumeroHorasSemana() > 40) {
+                throw new IllegalArgumentException("Número de horas semanais deve estar entre 1 e 40");
+            }
+
+            // Validar pessoa e perfil
+            if (contrato.getPessoa() == null) {
+                throw new IllegalArgumentException("Pessoa é obrigatória");
+            }
+            if (contrato.getPerfil() == null) {
+                throw new IllegalArgumentException("Perfil é obrigatório");
+            }
+
+    return save(contrato); 
     }
 }

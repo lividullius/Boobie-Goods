@@ -1,0 +1,87 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modalPerfil"
+  tabindex="-1"
+  aria-labelledby="modalPerfilLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPerfilLabel">Gerenciar Perfis da Pessoa</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <form (ngSubmit)="onSubmit(formPerfil)" #formPerfil="ngForm">
+        <div class="modal-body">
+          <!-- Seleção de Pessoa -->
+          <div class="mb-4">
+            <label for="selectPessoa" class="form-label">Selecione a pessoa:</label>
+            <select
+              class="form-select"
+              id="selectPessoa"
+              name="pessoaId"
+              [(ngModel)]="pessoaSelecionadaId"
+              (change)="onPessoaChange()"
+              required
+            >
+              <option value="">-- Selecione uma pessoa --</option>
+              <option *ngFor="let pessoa of pessoas" [value]="pessoa.id">
+                {{ pessoa.nome }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Perfis da Pessoa (só aparece se pessoa estiver selecionada) -->
+          <div *ngIf="pessoaSelecionada" class="mb-4">
+            <h6 class="mb-3">Perfis atuais de {{ pessoaSelecionada.nome }}:</h6>
+            <div class="current-perfis mb-3">
+              <span *ngFor="let perfil of pessoaSelecionada.perfis" 
+                    class="badge bg-primary me-2 mb-2">
+                {{ perfil }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Checklist de Perfis -->
+          <div *ngIf="pessoaSelecionada">
+            <label class="form-label mb-3">Adicionar novos perfis:</label>
+            
+            <div *ngFor="let perfil of perfisDisponiveis" class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [id]="'check' + perfil.id"
+                [name]="perfil.id"
+                [(ngModel)]="perfisCheckbox[perfil.id]"
+                [disabled]="isPessoaTemPerfil(perfil.id)"
+              />
+              <label class="form-check-label" [for]="'check' + perfil.id">
+                {{ perfil.nome }}
+                <small *ngIf="isPessoaTemPerfil(perfil.id)" class="text-muted">(já possui)</small>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="!pessoaSelecionada">
+            Salvar Perfis
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
