@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, DatePipe } from '@angular/common'; 
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'app-modal-criar-projeto',
   standalone: true,
   imports: [
     CommonModule,   
-    FormsModule,
-    DatePipe        
+    FormsModule,        
   ],
   templateUrl: './modal-criar-projeto.component.html',
   styleUrls: ['./modal-criar-projeto.component.scss']
