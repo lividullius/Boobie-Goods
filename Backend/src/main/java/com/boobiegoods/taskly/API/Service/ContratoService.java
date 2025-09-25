@@ -68,8 +68,8 @@ public class ContratoService {
     }
 
     // Buscar contratos por valor hora (intervalo)
-    public List<Contrato> findBySalarioHora(Double valorMin, Double valorMax) {
-        return contratoRepository.findByValorHoraBetween(valorMin, valorMax);
+    public List<Contrato> findBySalarioHora(BigDecimal valorMin, BigDecimal valorMax) {
+        return contratoRepository.findBySalarioHoraBetween(valorMin, valorMax);
     }
 
     // Buscar contratos por horas semanais
@@ -103,12 +103,12 @@ public class ContratoService {
     }
 
     // Buscar contratos ordenados por valor hora (crescente)
-    public List<Contrato> findAllOrderBySalarioHoraAsc() {
+    public List<Contrato> findAllByOrderBySalarioHoraAsc() {
         return contratoRepository.findAllByOrderBySalarioHoraAsc();
     }
 
     // Buscar contratos ordenados por valor hora (decrescente)
-    public List<Contrato> findAllOrderBySalarioHoraDesc() {
+    public List<Contrato> findAllByOrderBySalarioHoraDesc() {
         return contratoRepository.findAllByOrderBySalarioHoraDesc();
     }
 
