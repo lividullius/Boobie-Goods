@@ -3,7 +3,6 @@ package com.boobiegoods.taskly.Data.Repository;
 import com.boobiegoods.taskly.Data.Interfaces.IContratoRepository;
 import com.boobiegoods.taskly.Domain.Contrato;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
