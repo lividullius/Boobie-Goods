@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
 
@@ -122,7 +123,7 @@ public class ProjetoService {
         return save(projeto);
     }
 
-     /*CÁLCULO DE CUSTO */
+    /* CÁLCULO DE CUSTO (GERAL) = do início do projeto até o fim (ou hoje) */
     @Transactional(readOnly = true)
     public BigDecimal calcularCustoGeralProjeto(Integer projetoId) {
         Projeto p = projetoRepository.findById(projetoId)
@@ -134,6 +135,7 @@ public class ProjetoService {
         return calcularCustoProjetoNoPeriodo(projetoId, ini, fim);
     }
 
+    /* CÁLCULO DE CUSTO (POR PERÍODO) — apenas dias úteis (seg–sex) */
     @Transactional(readOnly = true)
     public BigDecimal calcularCustoProjetoNoPeriodo(Integer projetoId, LocalDate inicio, LocalDate fim) {
         Projeto p = projetoRepository.findById(projetoId)
@@ -144,43 +146,68 @@ public class ProjetoService {
         if (inicio == null || fim == null || fim.isBefore(inicio))
             throw new IllegalArgumentException("Período inválido");
 
+        // Limita o pedido ao período do projeto
         LocalDate baseIni = max(inicio, p.getDataInicioProjeto());
         LocalDate baseFim = min(fim, nn(p.getDataTerminoProjeto(), fim));
         if (baseIni.isAfter(baseFim)) return BigDecimal.ZERO;
 
-        // filtra no banco por (Projeto ∩ Contrato)
-        var alocacoes = alocacaoRepository
-                .findByProjetoAndPeriodoOverlapFetchContrato(projetoId, baseIni, baseFim);
+        // Busca alocações do projeto onde o CONTRATO também intersecta o período
+        var alocacoes = alocacaoRepository.findByProjetoAndPeriodoOverlapFetchContrato(projetoId, baseIni, baseFim);
 
         BigDecimal total = BigDecimal.ZERO;
-        final BigDecimal SEVEN = BigDecimal.valueOf(7);
+        final BigDecimal FIVE = BigDecimal.valueOf(5);
 
         for (Alocacao a : alocacoes) {
             var c = a.getContrato();
             if (c == null || c.getSalarioHora() == null) continue;
 
-            int horasSemanal = a.getHorasSemanal(); // se for Integer, faça null-check
-            if (horasSemanal <= 0) continue;
+            Integer horasSemanal = a.getHorasSemanal();
+            if (horasSemanal == null || horasSemanal <= 0) continue;
 
-            // Garantia extra (mesmo já filtrando no banco)
+            // Interseção final = (Projeto) ∩ (Contrato)
             LocalDate effIni = max(baseIni, c.getDataInicioContrato());
             LocalDate effFim = min(baseFim, nn(c.getDataFimContrato(), baseFim));
             if (effIni == null || effFim == null || effIni.isAfter(effFim)) continue;
 
-            long dias = ChronoUnit.DAYS.between(effIni, effFim.plusDays(1)); // inclusivo
-            BigDecimal horasDia = BigDecimal.valueOf(horasSemanal).divide(SEVEN, 6, RoundingMode.HALF_UP);
+            // >>> só dias úteis (inclusivo)
+            long diasUteis = businessDaysBetween(effIni, effFim);
+            if (diasUteis <= 0) continue;
+
+            // horas por dia considerando 5 dias úteis por semana
+            BigDecimal horasDia = BigDecimal.valueOf(horasSemanal)
+                    .divide(FIVE, 6, RoundingMode.HALF_UP);
 
             BigDecimal custo = c.getSalarioHora()
                     .multiply(horasDia)
-                    .multiply(BigDecimal.valueOf(dias));
+                    .multiply(BigDecimal.valueOf(diasUteis));
 
             total = total.add(custo);
         }
 
-        return total.setScale(2, RoundingMode.HALF_UP); // arredonda só no final
+        // arredonda o total no final
+        return total.setScale(2, RoundingMode.HALF_UP);
     }
 
-    // helpers
+    /** Conta dias úteis (seg–sex) entre start e end */
+    private static long businessDaysBetween(LocalDate start, LocalDate end) {
+        if (start == null || end == null || start.isAfter(end)) return 0L;
+
+        long days = ChronoUnit.DAYS.between(start, end) + 1; // inclusivo
+        long fullWeeks = days / 7;
+        long business = fullWeeks * 5;
+
+        long remaining = days % 7;
+        DayOfWeek dow = start.getDayOfWeek();
+        for (int i = 0; i < remaining; i++) {
+            DayOfWeek d = dow.plus(i);
+            if (d != DayOfWeek.SATURDAY && d != DayOfWeek.SUNDAY) {
+                business++;
+            }
+        }
+        return business;
+    }
+
+    // helpers (aceitam null)
     private static LocalDate nn(LocalDate d, LocalDate fb) { return d != null ? d : fb; }
     private static LocalDate max(LocalDate a, LocalDate b) { if (a == null) return b; if (b == null) return a; return a.isAfter(b) ? a : b; }
     private static LocalDate min(LocalDate a, LocalDate b) { if (a == null) return b; if (b == null) return a; return a.isBefore(b) ? a : b; }
