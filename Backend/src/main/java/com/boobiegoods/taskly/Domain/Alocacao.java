@@ -1,7 +1,5 @@
 package com.boobiegoods.taskly.Domain;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -32,12 +30,6 @@ public class Alocacao {
     // Construtor padrão (obrigatório para JPA)
     public Alocacao() {}
 
-    @Column(name = "DataInicioAlocacao")
-    private LocalDate dataInicioAlocacao;
-
-    @Column(name = "DataFimAlocacao")
-    private LocalDate dataFimAlocacao;
-
     // Construtor
     public Alocacao(int idAlocacao, Projeto projeto, Contrato contrato, Pessoa pessoa, int horasSemanal) {
         this.idAlocacao = idAlocacao;
@@ -46,9 +38,6 @@ public class Alocacao {
         this.pessoa = pessoa;
         this.horasSemanal = horasSemanal;
     }
-
-    public LocalDate getDataInicio() { return dataInicioAlocacao; }
-    public LocalDate getDataFim()    { return dataFimAlocacao; }
 
     // Getters e setters
     public int getIdAlocacao() {

@@ -10,7 +10,7 @@ public class ContratoDTO {
     private LocalDate dataInicioContrato;
     private LocalDate dataFimContrato;
     private int numeroHorasSemana;
-    private BigDecimal valorporHora;  // mantido para compatibilidade
+    private BigDecimal salarioHora;
 
     public int getId() {
         return id;
@@ -54,8 +54,8 @@ public class ContratoDTO {
         this.numeroHorasSemana = numeroHorasSemana;
     }
 
-    public BigDecimal getValorporHora() { return valorporHora; }
-    public void setValorporHora(BigDecimal valorHora) { this.valorporHora = valorHora; }
+    public BigDecimal getSalarioHora() { return salarioHora; }
+    public void setSalarioHora(BigDecimal salarioHora) { this.salarioHora = salarioHora; }
 
     }
 
