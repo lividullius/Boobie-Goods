@@ -39,6 +39,7 @@ public class Contrato {
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Alocacao> alocacoes = new HashSet<>();
 
+
     // Construtor padrão (JPA)
     public Contrato() {}
 
@@ -84,7 +85,7 @@ public class Contrato {
     public Set<Alocacao> getAlocacoes() { return alocacoes; }
     public void setAlocacoes(Set<Alocacao> alocacoes) { this.alocacoes = alocacoes; }
 
-    // Conveniência (se ainda houver código antigo chamando estes nomes)
+    // 
     public LocalDate getDataInicio() { return dataInicioContrato; }
     public LocalDate getDataFim()    { return dataFimContrato; }
 }

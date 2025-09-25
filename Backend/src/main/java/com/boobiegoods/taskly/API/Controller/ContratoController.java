@@ -85,7 +85,7 @@ public class ContratoController {
         novoContrato.setDataInicioContrato(contratoDTO.getDataInicioContrato());
         novoContrato.setDataFimContrato(contratoDTO.getDataFimContrato());
         novoContrato.setNumeroHorasSemana(contratoDTO.getNumeroHorasSemana());
-        novoContrato.setSalarioHora(contratoDTO.getValorporHora());
+        novoContrato.setSalarioHora(contratoDTO.getSalarioHora());
         
         contratos.add(novoContrato);
         
@@ -169,7 +169,7 @@ public class ContratoController {
         dto.setDataInicioContrato(contrato.getDataInicioContrato());
         dto.setDataFimContrato(contrato.getDataFimContrato());
         dto.setNumeroHorasSemana(contrato.getNumeroHorasSemana());
-        dto.setValorporHora(contrato.getSalarioHora());
+        dto.setSalarioHora(contrato.getSalarioHora());
         return dto;
     }
     
