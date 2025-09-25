@@ -65,7 +65,6 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer> {
 
     //Buscar contratos ordenados por valor hora (decrescente)
     List<Contrato> findAllByOrderBySalarioHoraDesc();
-    List<Contrato> findAllByOrderBySalarioHoraDesc();
 
     //Buscar contratos de uma pessoa por período
     @Query("SELECT c FROM Contrato c WHERE c.pessoa.id = :pessoaId AND c.dataInicioContrato BETWEEN :inicio AND :fim")
