@@ -59,7 +59,7 @@ export class AlocacaoComponent implements OnInit {
     });
   }
   
-  carregarPessoas(): Promise<void> {
+  /* carregarPessoas(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.pessoaService.getAllPessoasComPerfis().subscribe({
         next: (data) => {
@@ -75,7 +75,11 @@ export class AlocacaoComponent implements OnInit {
         }
       });
     });
-  }
+  } */
+
+    carregarPessoas(){
+      
+    }
   
   carregarProjetos(): Promise<void> {
     return new Promise((resolve, reject) => {
