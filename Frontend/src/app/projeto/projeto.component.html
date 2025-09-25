@@ -4,12 +4,61 @@
     <h2 class="m-0">Projetos</h2>
 
     <!-- Botão que abre o modal -->
-    <button class="btn criar-contrato-button "
+    <button class="btn criar-contrato-button"
             data-bs-toggle="modal"
             data-bs-target="#modalCriarProjeto">
       Criar projeto
     </button>
   </div>
+
+  <!-- ALERTAS -->
+  <div *ngIf="error" class="alert alert-danger py-2 mb-3">{{ error }}</div>
+  <div *ngIf="loading" class="alert alert-secondary py-2 mb-3">Carregando...</div>
+
+  <!-- ===== Card de teste rápido (cálculo de custo) ===== -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Teste rápido — custo por projeto</h5>
+
+      <ul class="mb-2">
+        <li *ngFor="let p of projetos" class="mb-2">
+          <strong>{{ p.nomeProjeto }}</strong>
+          <span class="text-muted">(id: {{ p.id }})</span>
+
+          <button class="btn btn-sm btn-outline-primary ms-2"
+                  (click)="verCusto(p.id)">
+            Custo geral
+          </button>
+
+          <span class="ms-3">
+            Período:
+            <input type="date"
+                   class="form-control form-control-sm d-inline-block"
+                   style="width: 170px"
+                   [(ngModel)]="dataInicio"
+                   [ngModelOptions]="{standalone: true}">
+            <input type="date"
+                   class="form-control form-control-sm d-inline-block ms-2"
+                   style="width: 170px"
+                   [(ngModel)]="dataFim"
+                   [ngModelOptions]="{standalone: true}">
+            <button class="btn btn-sm btn-outline-secondary ms-2"
+                    (click)="verCustoPeriodo(p.id)">
+              Custo no período
+            </button>
+          </span>
+        </li>
+      </ul>
+
+      <div *ngIf="custo !== null" class="mt-2">
+        <b>Custo geral:</b> {{ custo | number:'1.2-2' }}
+      </div>
+      <div *ngIf="custoPeriodo !== null" class="mt-1">
+        <b>Custo no período:</b> {{ custoPeriodo | number:'1.2-2' }}
+      </div>
+    </div>
+  </div>
+  <!-- ===== /Card de teste rápido ===== -->
 
   <!-- Card / Tabela -->
   <div class="card shadow-sm">
@@ -27,7 +76,7 @@
           <tr *ngFor="let p of projetos">
             <td>{{ p.nomeProjeto }}</td>
             <td>{{ p.dataInicioProjeto | date:'dd/MM/yyyy' }}</td>
-            <td>{{ p.dataTerminoProjeto    | date:'dd/MM/yyyy' }}</td>
+            <td>{{ p.dataTerminoProjeto | date:'dd/MM/yyyy' }}</td>
             <td>{{ p.descricaoProjeto }}</td>
           </tr>
           <tr *ngIf="!projetos?.length">

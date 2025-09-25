@@ -2,42 +2,41 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Projeto } from '../models/projeto';
+import { environment } from '../../environments/environments';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProjetoService {
-  private apiUrl = 'http://localhost:8080/api/projetos';
+  private base = `${environment.apiUrl}/projetos`;
 
   constructor(private http: HttpClient) {}
 
-  // Buscar todos os projetos
+  // CRUD
   getAllProjetos(): Observable<Projeto[]> {
-    return this.http.get<Projeto[]>(this.apiUrl);
+    return this.http.get<Projeto[]>(this.base);
   }
-
-  // Buscar projeto por ID
   getProjetoById(id: number): Observable<Projeto> {
-    return this.http.get<Projeto>(`${this.apiUrl}/${id}`);
+    return this.http.get<Projeto>(`${this.base}/${id}`);
   }
-
-  // Buscar projetos onde uma pessoa não está alocada
   getProjetosNaoAlocados(pessoaId: number): Observable<Projeto[]> {
-    return this.http.get<Projeto[]>(`${this.apiUrl}/nao-alocados/${pessoaId}`);
+    return this.http.get<Projeto[]>(`${this.base}/nao-alocados/${pessoaId}`);
   }
-
-  // Criar novo projeto
   createProjeto(projeto: Projeto): Observable<Projeto> {
-    return this.http.post<Projeto>(this.apiUrl, projeto);
+    return this.http.post<Projeto>(this.base, projeto);
   }
-
-  // Atualizar projeto
   updateProjeto(id: number, projeto: Projeto): Observable<Projeto> {
-    return this.http.put<Projeto>(`${this.apiUrl}/${id}`, projeto);
+    return this.http.put<Projeto>(`${this.base}/${id}`, projeto);
+  }
+  deleteProjeto(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${id}`);
   }
 
-  // Remover projeto
-  deleteProjeto(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  // Custo 
+  getCustoGeral(id: number): Observable<number> {
+    return this.http.get<number>(`${this.base}/${id}/custo`);
+  }
+  getCustoPeriodo(id: number, dataInicio: string, dataFim: string): Observable<number> {
+    return this.http.get<number>(`${this.base}/${id}/custo-periodo`, {
+      params: { dataInicio, dataFim }
+    });
   }
 }
