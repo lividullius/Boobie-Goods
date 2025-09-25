@@ -1,0 +1,27 @@
+/* Estilos consistentes com outros componentes */
+.criar-contrato-button {
+  background-color: #C6D9BA;
+  margin: 0 5px;
+  padding: 8px 16px;
+  
+  &:hover {
+    background-color: #ECECEC;
+  }
+}
+
+.card {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.table {
+  th {
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+}

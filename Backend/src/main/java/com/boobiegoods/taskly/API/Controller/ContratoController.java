@@ -74,6 +74,7 @@ public class ContratoController {
         if(contratoDTO.getDataFimContrato().isBefore(contratoDTO.getDataInicioContrato())) {
             throw new RuntimeException("Data de final não pode ser maior que a data de inicio do contrato");
         }
+<<<<<<< HEAD
 
         if(contratoDTO.getNumeroHorasSemana() > 40) {
             throw new RuntimeException("O número de horas semanais não pode ser superior a 40");
@@ -115,6 +116,22 @@ public class ContratoController {
     
 
 
+=======
+        
+        Contrato novoContrato = new Contrato();
+        novoContrato.setId(proximoId++);
+        novoContrato.setPessoa(pessoaOpt.get());
+        novoContrato.setPerfil(perfilOpt.get());
+        novoContrato.setDataInicioContrato(contratoDTO.getDataInicioContrato());
+        novoContrato.setDataFimContrato(contratoDTO.getDataFimContrato());
+        novoContrato.setNumeroHorasSemana(contratoDTO.getNumeroHorasSemana());
+        novoContrato.setSalarioHora(contratoDTO.getSalarioHora());
+        
+        contratos.add(novoContrato);
+        
+        ContratoDTO contratoCriado = converterParaDTO(novoContrato);
+        return ResponseEntity.ok(contratoCriado);
+>>>>>>> ebfc69c7d6a9467912cad0420310d47a7a4bc41c
     }
     
     /**
@@ -162,6 +179,7 @@ public class ContratoController {
         Optional<Contrato> contratoOpt = contratos.stream()
                 .filter(c -> c.getId() == id)
                 .findFirst();
+<<<<<<< HEAD
         
         if (contratoOpt.isPresent()) {
             Contrato contrato = contratoOpt.get();
@@ -194,4 +212,84 @@ public class ContratoController {
     
     // Inicializar dados de teste
     
+=======
+
+        if (contratoOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        Contrato contrato = contratoOpt.get();
+
+        LocalDate ini = contrato.getDataInicioContrato();
+        LocalDate fim = contrato.getDataFimContrato();
+
+        long dias = ChronoUnit.DAYS.between(ini, fim) + 1; // inclusivo
+
+        // horas/dia = horas/semana / 7
+        BigDecimal horasDia = BigDecimal.valueOf(contrato.getNumeroHorasSemana())
+                .divide(BigDecimal.valueOf(7), 6, RoundingMode.HALF_UP);
+
+        BigDecimal custoTotal = contrato.getSalarioHora()
+                .multiply(horasDia)
+                .multiply(BigDecimal.valueOf(dias))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        return ResponseEntity.ok(custoTotal);
+    }
+    
+    // Método auxiliar para converter Contrato para ContratoDTO
+    private ContratoDTO converterParaDTO(Contrato contrato) {
+        ContratoDTO dto = new ContratoDTO();
+        dto.setId(contrato.getId());
+        dto.setFkPessoa(contrato.getPessoa().getId());
+        dto.setFkPerfil(contrato.getPerfil().getId());
+        dto.setDataInicioContrato(contrato.getDataInicioContrato());
+        dto.setDataFimContrato(contrato.getDataFimContrato());
+        dto.setNumeroHorasSemana(contrato.getNumeroHorasSemana());
+        dto.setSalarioHora(contrato.getSalarioHora());
+        return dto;
+    }
+    
+    // Inicializar dados de teste
+    private void inicializarDadosDeTeste() {
+        // Criar pessoas de exemplo
+        pessoas.add(new Pessoa(1, "João Silva"));
+        pessoas.add(new Pessoa(2, "Maria Santos"));
+        pessoas.add(new Pessoa(3, "Pedro Oliveira"));
+        
+        // Criar perfis de exemplo
+        perfis.add(new Perfil(1, TipoPerfil.Developer));
+        perfis.add(new Perfil(2, TipoPerfil.QualityAnalyst));
+        perfis.add(new Perfil(3, TipoPerfil.Gerente));
+        
+        // Criar contratos de exemplo
+        Contrato contrato1 = new Contrato();
+        contrato1.setId(proximoId++);
+        contrato1.setPessoa(pessoas.get(0));
+        contrato1.setPerfil(perfis.get(0));
+        contrato1.setDataInicioContrato(LocalDate.of(2024, 1, 1));
+        contrato1.setDataFimContrato(LocalDate.of(2024, 12, 31));
+        contrato1.setNumeroHorasSemana(40);
+        contrato1.setSalarioHora(BigDecimal.valueOf(50));
+        contratos.add(contrato1);
+        
+        Contrato contrato2 = new Contrato();
+        contrato2.setId(proximoId++);
+        contrato2.setPessoa(pessoas.get(1));
+        contrato2.setPerfil(perfis.get(1));
+        contrato2.setDataInicioContrato(LocalDate.of(2024, 3, 1));
+        contrato2.setDataFimContrato(LocalDate.of(2025, 2, 28));
+        contrato2.setNumeroHorasSemana(30);
+        contrato2.setSalarioHora(BigDecimal.valueOf(45));
+        contratos.add(contrato2);
+        
+        Contrato contrato3 = new Contrato();
+        contrato3.setId(proximoId++);
+        contrato3.setPessoa(pessoas.get(2));
+        contrato3.setPerfil(perfis.get(2));
+        contrato3.setDataInicioContrato(LocalDate.of(2024, 6, 1));
+        contrato3.setDataFimContrato(LocalDate.of(2024, 11, 30));
+        contrato3.setNumeroHorasSemana(40);
+        contrato3.setSalarioHora(BigDecimal.valueOf(80));
+        contratos.add(contrato3);
+    }
+>>>>>>> ebfc69c7d6a9467912cad0420310d47a7a4bc41c
 }
