@@ -75,6 +75,8 @@ public class PessoaController {
         return ResponseEntity.ok(perfis);
     }
 
+
+    
     /**
      * GET /api/pessoas/{id}/projetos - Listar projetos de uma pessoa
      */
