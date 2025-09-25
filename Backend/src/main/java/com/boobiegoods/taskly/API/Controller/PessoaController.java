@@ -4,12 +4,10 @@ import com.boobiegoods.taskly.API.DTO.PerfilDTO;
 import com.boobiegoods.taskly.API.DTO.PessoaDTO;
 import com.boobiegoods.taskly.API.Service.PessoaService;
 import com.boobiegoods.taskly.API.Service.PerfilService;
-import com.boobiegoods.taskly.Domain.Perfil;
 import com.boobiegoods.taskly.Domain.Pessoa;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +85,7 @@ public class PessoaController {
                 .findFirst();
 
         if (pessoaOpt.isPresent()) {
-            // TODO: Implementar busca real dos projetos através das alocações
+            // Implementar busca real dos projetos através das alocações
             List<String> projetos = new ArrayList<>();
             projetos.add("Sistema Web");
             projetos.add("App Mobile");

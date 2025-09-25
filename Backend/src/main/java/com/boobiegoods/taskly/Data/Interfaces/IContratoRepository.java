@@ -39,7 +39,7 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer> {
     List<Contrato> findByDataInicioContratoBetween(LocalDate dataInicio, LocalDate dataFim);
 
     //Buscar contratos por valor hora (intervalo)
-    @Query("SELECT c FROM Contrato c WHERE c.valorHora BETWEEN :valorMin AND :valorMax")
+    @Query("SELECT c FROM Contrato c WHERE c.salarioHora BETWEEN :valorMin AND :valorMax")
     List<Contrato> findBySalarioHoraBetween(@Param("valorMin") BigDecimal valorMin, @Param("valorMax") BigDecimal valorMax);
 
     //Buscar contratos por número de horas semanais
