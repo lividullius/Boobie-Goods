@@ -5,7 +5,7 @@ import { PessoaDTO, PessoaService } from '../services/pessoa.service';
 import { Projeto } from '../models/projeto';
 import { ProjetoService } from '../services/projeto.service';
 import { AlocacaoService, AlocacaoDTO } from '../services/alocacao.service';
-import { ModalCriacaoAlocacaoComponent } from '../modal-criacao-alocacao/modal-criacao-alocacao.component';
+import { ModalCriacaoAlocacaoComponent } from './modal-criacao-alocacao/modal-criacao-alocacao.component';
 
 interface AlocacaoView {
   id: number;

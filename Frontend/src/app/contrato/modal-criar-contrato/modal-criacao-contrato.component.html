@@ -11,12 +11,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
 
-      <form>
+      <form #modalContratoForm="ngForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
 
-          <div class="mb-3" required>
+          <div class="mb-3">
             <label for="selectPessoa" class="form-label">Selecionar Pessoa</label>
-            <select class="form-select" id="selectPessoa" >
+            <select formControlName="pessoa" class="form-select" id="selectPessoa" >
               <option selected disabled>Escolha uma pessoa</option>
               <option>Julia</option>
               <option>Livia</option>
@@ -25,9 +25,9 @@
             </select>
           </div>
 
-          <div class="mb-3" required>
+          <div class="mb-3">
             <label for="selectPerfil" class="form-label">Selecionar Perfil</label>
-            <select class="form-select" id="selectPerfil">
+            <select formControlName="perfil" class="form-select" id="selectPerfil">
               <option selected disabled>Escolha um perfil</option>
               <option>Dev</option>
               <option>QA</option>
@@ -39,7 +39,10 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="dataInicio" class="form-label">Data de Início</label>
-              <input type="date" class="form-control" id="dataInicio" required>
+              <input type="date" class="form-control" id="dataInicio" formControlName="dataInicio">
+            </div>
+            <div class="text-danger">
+
             </div>
             <div class="col-md-6 mb-3">
               <label for="dataFim" class="form-label">Data de Fim</label>
@@ -65,6 +68,9 @@
           <button type="submit" class="btn btn-primary">Salvar Contrato</button>
         </div>
       </form>
+      <div ngIf="mensagemFeedbackSucesso" class="alert alert-sucess mt-2">
+        {{ mensagemFeedbackSucesso }}
+      </div>
 
     </div>
   </div>

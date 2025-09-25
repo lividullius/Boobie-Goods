@@ -3,7 +3,7 @@ package com.boobiegoods.taskly.API.Controller;
 import com.boobiegoods.taskly.API.DTO.ProjetoDTO;
 import com.boobiegoods.taskly.API.Service.ProjetoService;
 import com.boobiegoods.taskly.Domain.Projeto;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projetos")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProjetoController {
     
-    @Autowired
-    private ProjetoService projetoService;
+    private final ProjetoService projetoService;
+
+    public ProjetoController (ProjetoService projetoService){
+        this.projetoService = projetoService;
+    }
     
     /**
      * GET /api/projetos - Listar todos os projetos
