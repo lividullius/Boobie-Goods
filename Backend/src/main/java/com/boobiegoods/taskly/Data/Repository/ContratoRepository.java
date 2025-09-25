@@ -17,9 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContratoRepository extends IContratoRepository {
 
-     List<Contrato> findAllByOrderBySalarioHoraAsc();
-     List<Contrato> findAllByOrderBySalarioHoraDesc();
-     List<Contrato> findBySalarioHoraBetween(BigDecimal min, BigDecimal max);
+    List<Contrato> findAllByOrderBySalarioHoraAsc();
     // Não precisamos implementar nada aqui, pois o Spring Data JPA
     // fornece automaticamente todas as implementações baseadas nos
     // nomes dos métodos definidos na interface IContratoRepository
