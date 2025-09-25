@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PessoaDTO, PessoaService } from '../services/pessoa.service';
-import { ProjetoService } from '../services/projeto.service';
-import { AlocacaoService, AlocacaoDTO } from '../services/alocacao.service';
-import { Projeto } from '../models/projeto';
+import { PessoaDTO, PessoaService } from '../../services/pessoa.service';
+import { ProjetoService } from '../../services/projeto.service';
+import { AlocacaoService, AlocacaoDTO } from '../../services/alocacao.service';
+import { Projeto } from '../../models/projeto';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({

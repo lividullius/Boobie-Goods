@@ -19,8 +19,11 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class ProjetoController {
     
-    @Autowired
-    private ProjetoService projetoService;
+    private final ProjetoService projetoService;
+
+    public ProjetoController (ProjetoService projetoService){
+        this.projetoService = projetoService;
+    }
     
     /**
      * GET /api/projetos - Listar todos os projetos
