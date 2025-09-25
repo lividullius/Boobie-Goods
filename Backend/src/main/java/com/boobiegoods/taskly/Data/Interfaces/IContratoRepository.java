@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer> {
 
     //Buscar contratos por valor hora (intervalo)
     @Query("SELECT c FROM Contrato c WHERE c.valorHora BETWEEN :valorMin AND :valorMax")
-    List<Contrato> findByValorHoraBetween(@Param("valorMin") Double valorMin, @Param("valorMax") Double valorMax);
+    List<Contrato> findBySalarioHoraBetween(@Param("valorMin") BigDecimal valorMin, @Param("valorMax") BigDecimal valorMax);
 
     //Buscar contratos por número de horas semanais
     List<Contrato> findByNumeroHorasSemana(Integer horas);
@@ -63,7 +64,7 @@ public interface IContratoRepository extends JpaRepository<Contrato, Integer> {
     List<Contrato> findAllByOrderByDataInicioContratoAsc();
 
     //Buscar contratos ordenados por valor hora (decrescente)
-    List<Contrato> findAllByOrderByValorHoraDesc();
+    List<Contrato> findAllByOrderBySalarioHoraDesc();
 
     //Buscar contratos de uma pessoa por período
     @Query("SELECT c FROM Contrato c WHERE c.pessoa.id = :pessoaId AND c.dataInicioContrato BETWEEN :inicio AND :fim")

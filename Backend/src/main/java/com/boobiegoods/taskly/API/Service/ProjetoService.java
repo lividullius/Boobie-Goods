@@ -8,6 +8,8 @@ import com.boobiegoods.taskly.Domain.Projeto;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -121,6 +123,7 @@ public class ProjetoService {
     }
 
      /*CÁLCULO DE CUSTO */
+    @Transactional(readOnly = true)
     public BigDecimal calcularCustoGeralProjeto(Integer projetoId) {
         Projeto p = projetoRepository.findById(projetoId)
             .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado"));
@@ -131,6 +134,7 @@ public class ProjetoService {
         return calcularCustoProjetoNoPeriodo(projetoId, ini, fim);
     }
 
+    @Transactional(readOnly = true)
     public BigDecimal calcularCustoProjetoNoPeriodo(Integer projetoId, LocalDate inicio, LocalDate fim) {
         Projeto p = projetoRepository.findById(projetoId)
             .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado"));
@@ -140,49 +144,44 @@ public class ProjetoService {
         if (inicio == null || fim == null || fim.isBefore(inicio))
             throw new IllegalArgumentException("Período inválido");
 
-        // Período base = pedido limitado ao projeto
         LocalDate baseIni = max(inicio, p.getDataInicioProjeto());
         LocalDate baseFim = min(fim, nn(p.getDataTerminoProjeto(), fim));
         if (baseIni.isAfter(baseFim)) return BigDecimal.ZERO;
 
-        // Traz alocações do projeto com contrato carregado
-        var alocacoes = alocacaoRepository.findByProjetoFetchContrato(projetoId);
+        // filtra no banco por (Projeto ∩ Contrato)
+        var alocacoes = alocacaoRepository
+                .findByProjetoAndPeriodoOverlapFetchContrato(projetoId, baseIni, baseFim);
 
         BigDecimal total = BigDecimal.ZERO;
+        final BigDecimal SEVEN = BigDecimal.valueOf(7);
 
         for (Alocacao a : alocacoes) {
             var c = a.getContrato();
             if (c == null || c.getSalarioHora() == null) continue;
 
-            int horasSemanal = a.getHorasSemanal();
+            int horasSemanal = a.getHorasSemanal(); // se for Integer, faça null-check
             if (horasSemanal <= 0) continue;
 
-            // Interseção final = (período do Projeto) ∩ (período do Contrato)
+            // Garantia extra (mesmo já filtrando no banco)
             LocalDate effIni = max(baseIni, c.getDataInicioContrato());
             LocalDate effFim = min(baseFim, nn(c.getDataFimContrato(), baseFim));
             if (effIni == null || effFim == null || effIni.isAfter(effFim)) continue;
 
-            long dias = ChronoUnit.DAYS.between(effIni, effFim) + 1; // inclusivo
-            BigDecimal horasDia = BigDecimal.valueOf(horasSemanal)
-                .divide(BigDecimal.valueOf(7), 6, RoundingMode.HALF_UP);
+            long dias = ChronoUnit.DAYS.between(effIni, effFim.plusDays(1)); // inclusivo
+            BigDecimal horasDia = BigDecimal.valueOf(horasSemanal).divide(SEVEN, 6, RoundingMode.HALF_UP);
 
             BigDecimal custo = c.getSalarioHora()
                     .multiply(horasDia)
-                    .multiply(BigDecimal.valueOf(dias))
-                    .setScale(2, RoundingMode.HALF_UP);
+                    .multiply(BigDecimal.valueOf(dias));
 
             total = total.add(custo);
         }
 
-        return total.setScale(2, RoundingMode.HALF_UP);
+        return total.setScale(2, RoundingMode.HALF_UP); // arredonda só no final
     }
 
-    // helpers (aceitam null)
+    // helpers
     private static LocalDate nn(LocalDate d, LocalDate fb) { return d != null ? d : fb; }
-    private static LocalDate max(LocalDate a, LocalDate b) {
-        if (a == null) return b; if (b == null) return a; return a.isAfter(b) ? a : b;
-    }
-    private static LocalDate min(LocalDate a, LocalDate b) {
-        if (a == null) return b; if (b == null) return a; return a.isBefore(b) ? a : b;
-    }
+    private static LocalDate max(LocalDate a, LocalDate b) { if (a == null) return b; if (b == null) return a; return a.isAfter(b) ? a : b; }
+    private static LocalDate min(LocalDate a, LocalDate b) { if (a == null) return b; if (b == null) return a; return a.isBefore(b) ? a : b; }
 }

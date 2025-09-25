@@ -98,12 +98,16 @@ public class ProjetoController {
      * GET /api/projetos/{id}/custo-periodo?dataInicio=yyyy-MM-dd&dataFim=yyyy-MM-dd
      * Calcular custo por período específico
      */
-    @GetMapping("/{id}/custo-periodo")
-    public ResponseEntity<BigDecimal> calcularCustoPorPeriodo(
+     @GetMapping("/{id}/custo-periodo")
+      public ResponseEntity<BigDecimal> calcularCustoPorPeriodo(
             @PathVariable int id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
+
         if (!projetoService.existsById(id)) return ResponseEntity.notFound().build();
+        if (dataInicio == null || dataFim == null || dataFim.isBefore(dataInicio)) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(projetoService.calcularCustoProjetoNoPeriodo(id, dataInicio, dataFim));
     }
     /**
