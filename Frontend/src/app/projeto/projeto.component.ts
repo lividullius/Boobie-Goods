@@ -6,14 +6,6 @@ import { Projeto } from '../models/projeto';
 
 declare const bootstrap: any; 
 
-type ProjetoDTO = {
-  id?: number;
-  nome: string;
-  dataInicio: string | Date;
-  dataFim?: string | Date | null;
-  descricao?: string | null;
-};
-
 @Component({
   standalone: true,
   selector: 'app-projeto',
