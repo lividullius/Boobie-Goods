@@ -75,7 +75,14 @@ public class PessoaController {
         return ResponseEntity.ok(perfis);
     }
 
+    @PostMapping("/{pessoaId}/perfis")
+    public ResponseEntity<Void> associarPerfis(
+            @PathVariable Integer pessoaId,
+            @RequestBody List<Integer> idsPerfis) {
 
+        pessoaService.associarPerfis(pessoaId, idsPerfis);
+        return ResponseEntity.ok().build();
+    }
     
     /**
      * GET /api/pessoas/{id}/projetos - Listar projetos de uma pessoa

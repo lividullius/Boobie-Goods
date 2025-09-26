@@ -68,7 +68,7 @@
           <button type="submit" class="btn btn-primary">Salvar Contrato</button>
         </div>
       </form>
-      <div ngIf="mensagemFeedbackSucesso" class="alert alert-sucess mt-2">
+      <div *ngIf="mensagemFeedbackSucesso" class="alert alert-sucess mt-2">
         {{ mensagemFeedbackSucesso }}
       </div>
 

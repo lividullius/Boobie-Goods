@@ -1,6 +1,8 @@
 package com.boobiegoods.taskly.API.Service;
 
+import com.boobiegoods.taskly.Data.Repository.PerfilRepository;
 import com.boobiegoods.taskly.Data.Repository.PessoaRepository;
+import com.boobiegoods.taskly.Domain.Perfil;
 import com.boobiegoods.taskly.Domain.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,9 +13,14 @@ import java.util.Optional;
 @Service
 public class PessoaService {
     
-    @Autowired
-    private PessoaRepository pessoaRepository;
+    private final PessoaRepository pessoaRepository;
+    private final PerfilService perfilService;
     
+    public PessoaService(PessoaRepository pessoaRepository, PerfilService perfilService){
+        this.pessoaRepository = pessoaRepository;
+        this.perfilService = perfilService;
+    }
+
     // Buscar todas as pessoas
     public List<Pessoa> findAll() {
         return pessoaRepository.findAll();
@@ -52,6 +59,14 @@ public class PessoaService {
     // Buscar pessoas por perfil
     public List<Pessoa> findByPerfilId(Integer perfilId) {
         return pessoaRepository.findByPerfilId(perfilId);
+    }
+
+    public void associarPerfis(int id, List<Integer> idsPerfis) {
+        Optional<Pessoa> pessoa = pessoaRepository.findById(id);
+
+        for (Integer perfilId : idsPerfis) {
+            pessoaRepository.associarPerfil(id, perfilId);
+        }
     }
     
     // Buscar pessoas com contratos

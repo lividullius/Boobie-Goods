@@ -117,7 +117,7 @@ public class PerfilController {
 }
 
     // Método auxiliar para converter Perfil para PerfilDTO
-    private PerfilDTO converterParaDTO(Perfil perfil) {
+    public PerfilDTO converterParaDTO(Perfil perfil) {
         PerfilDTO dto = new PerfilDTO(perfil.getId(), perfil.getTipo().name());
         return dto;
     }
