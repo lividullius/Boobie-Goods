@@ -26,18 +26,17 @@ export class ModalCriacaoPerfilComponent implements OnInit {
   }
   
   carregarPessoas(): void {
-    /* this.pessoaService.getAllPessoasComPerfis().subscribe({
-      next: (data) => {
-        this.pessoas = data.map(p => ({
-          ...p,
-          perfis: p.perfis || []
-        }));
-      },
-      error: (error) => {
-        console.error('Erro ao carregar pessoas:', error);
-      }
-    }); */
-  }
+  this.pessoaService.getAllPessoasComPerfis().subscribe({
+    next: (data: PessoaDTO[]) => {
+      this.pessoas = data;
+      console.log('Pessoas com perfis carregadas:', this.pessoas);
+    },
+    error: (error) => {
+      console.error('Erro ao carregar pessoas com perfis:', error);
+    }
+  });
+}
+
 
   // Todos os perfis disponíveis
   perfisDisponiveis = [

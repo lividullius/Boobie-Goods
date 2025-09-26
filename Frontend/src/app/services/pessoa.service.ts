@@ -61,15 +61,13 @@ export class PessoaService {
 
   getAllPessoasComPerfis(): Observable<PessoaDTO[]> {
   return this.getAllPessoas().pipe(
-
-    map(pessoas => pessoas.map(pessoa => {
-      return firstValueFrom(this.getPerfisFromPessoa(pessoa.id)).then(perfis => ({
+    map(pessoas => pessoas.map(pessoa =>
+      firstValueFrom(this.getPerfisFromPessoa(pessoa.id)).then(perfis => ({
         id: pessoa.id,
         nome: pessoa.nome,
-        perfis
-      }));
-    })),
-
+        perfis: perfis.map((p: any) => typeof p === 'string' ? p : p.tipo) // <-- aqui
+      }))
+    )),
     switchMap(promessas => forkJoin(promessas))
   );
 }
