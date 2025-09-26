@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-modal-criacao-contrato',
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './modal-criacao-contrato.component.html',
   styleUrl: './modal-criacao-contrato.component.scss'
 })
+
 export class ModalContratoComponent implements OnInit{
   modalContratoForm: FormGroup;
   mensagemFeedbackSucesso: string =  ' ';
@@ -24,7 +26,7 @@ export class ModalContratoComponent implements OnInit{
       { validators: this.dataValidator});
   }
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    
   }
 
   dataValidator(group: AbstractControl) {

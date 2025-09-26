@@ -60,22 +60,25 @@ export class AlocacaoComponent implements OnInit {
   }
   
   carregarPessoas(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.pessoaService.getAllPessoasComPerfis().subscribe({
-        next: (data) => {
-          // Criar mapeamento de ID para objeto pessoa
-          data.forEach(pessoa => {
-            this.pessoas[pessoa.id!] = pessoa;
-          });
-          resolve();
-        },
-        error: (error) => {
-          console.error('Erro ao carregar pessoas:', error);
-          reject(error);
-        }
-      });
+  return new Promise((resolve, reject) => {
+    this.pessoaService.getAllPessoasComPerfis().subscribe({
+      next: (data: PessoaDTO[]) => {
+        // Criar mapeamento de ID para objeto pessoa
+        data.forEach(pessoa => {
+          this.pessoas[pessoa.id!] = pessoa;
+        });
+        resolve();
+      },
+      error: (error) => {
+        console.error('Erro ao carregar pessoas:', error);
+        reject(error);
+      }
     });
-  }
+  });
+}
+
+
+    
   
   carregarProjetos(): Promise<void> {
     return new Promise((resolve, reject) => {

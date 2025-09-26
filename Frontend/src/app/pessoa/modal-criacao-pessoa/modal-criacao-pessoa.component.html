@@ -33,43 +33,18 @@
           </div>
           <div>
             <label>Perfis:</label>
-            <div class="form-check">
+            <div *ngFor="let perfil of perfisDisponiveis" class="form-check">
               <input
                 class="form-check-input"
                 type="checkbox"
-                id="checkDefault"
+                id="'perfil-' + perfil.id"
+                [value]="perfil.id"
+                name="perfis"
+                [(ngModel)]="perfil.selecionado"
               />
-              <label class="form-check-label" for="checkDefault"
-                >Desenvolvedor</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="checkDefault"
-              />
-              <label class="form-check-label" for="checkChecked"
-                >Analista de qualidade</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="checkDefault"
-              />
-              <label class="form-check-label" for="checkChecked"
-                >Security</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="checkDefault"
-              />
-              <label class="form-check-label" for="checkChecked">Gerente</label>
+              <label class="form-check-label" [for]="'perfil-' + perfil.id">
+                {{ perfil.tipo }}
+              </label>
             </div>
           </div>
         </div>

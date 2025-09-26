@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ModalCriacaoPessoaComponent } from './modal-criacao-pessoa/modal-criacao-pessoa.component';
 import { ModalCriacaoPerfilComponent } from './modal-criacao-perfil/modal-criacao-perfil.component';
 import { PessoaService, PessoaDTO } from '../services/pessoa.service';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-pessoa',
@@ -25,31 +26,44 @@ export class PessoaComponent implements OnInit {
   }
 
   loadPessoas(): void {
-    this.loading = true;
-    this.error = null;
-    
-    this.pessoaService.getAllPessoasComPerfis().subscribe({
-      next: (pessoas) => {
-        this.pessoas = pessoas;
-        this.loading = false;
-        console.log('Pessoas carregadas:', pessoas);
-      },
-      error: (error) => {
-        console.error('Erro ao carregar pessoas:', error);
-        this.error = 'Erro ao carregar lista de pessoas. Verifique se o backend está rodando.';
-        this.loading = false;
-        
-        // Fallback para dados mockados em caso de erro
-        this.pessoas = [
-          { id: 1, nome: 'João Silva', perfis: ['Gerente', 'Developer'] },
-          { id: 2, nome: 'Maria Santos', perfis: ['Developer', 'QualityAnalyst'] },
-          { id: 3, nome: 'Pedro Oliveira', perfis: ['Security'] },
-          { id: 4, nome: 'Ana Costa', perfis: ['Gerente'] },
-          { id: 5, nome: 'Carlos Ferreira', perfis: ['Developer', 'Security'] }
-        ];
-      }
-    });
-  }
+  this.loading = true;
+  this.error = null;
+
+  this.pessoaService.getAllPessoas().subscribe({
+    next: (pessoas) => {
+      // Cria um array de observables que pegam os perfis de cada pessoa
+      const requests = pessoas.map(p =>
+      this.pessoaService.getPerfisFromPessoa(p.id!).pipe(
+        map(perfis => ({
+          ...p,
+          perfis: perfis.map((perfil: any) =>
+            typeof perfil === 'string' ? perfil : perfil.tipo // força para string
+          )
+        }))
+      )
+    );
+
+      // Executa todos os requests em paralelo
+      forkJoin(requests).subscribe({
+        next: (pessoasComPerfis) => {
+          this.pessoas = pessoasComPerfis;
+          this.loading = false;
+          console.log('Pessoas com perfis:', this.pessoas);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar perfis:', error);
+          this.error = 'Erro ao carregar perfis das pessoas.';
+          this.loading = false;
+        }
+      });
+    },
+    error: (error) => {
+      console.error('Erro ao carregar pessoas:', error);
+      this.error = 'Erro ao carregar lista de pessoas. Verifique se o backend está rodando.';
+      this.loading = false;
+    }
+  });
+}
 
   refreshPessoas(): void {
     this.loadPessoas();
