@@ -124,18 +124,32 @@ public class ProjetoService {
     }
 
     /* CÁLCULO DE CUSTO (GERAL) = do início do projeto até o fim (ou hoje) */
+    //o "custo geral" é apenas um atalho para o cálculo por período, usando como período o intervalo completo do projeto (do início até o fim; se não tiver fim, usa a data de hoje).
     @Transactional(readOnly = true)
     public BigDecimal calcularCustoGeralProjeto(Integer projetoId) {
+        //Busca do projeto (ou falha se não existir)
         Projeto p = projetoRepository.findById(projetoId)
             .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado"));
 
+        //Define o período a calcular: [início do projeto, fim do projeto/hoje]
         LocalDate ini = p.getDataInicioProjeto();
         LocalDate fim = (p.getDataTerminoProjeto() != null) ? p.getDataTerminoProjeto() : LocalDate.now();
 
+        //Reaproveita a mesma lógica do cálculo por período
         return calcularCustoProjetoNoPeriodo(projetoId, ini, fim);
     }
 
-    /* CÁLCULO DE CUSTO (POR PERÍODO) — apenas dias úteis (seg–sex) */
+    /* CÁLCULO DE CUSTO (POR PERÍODO) — apenas dias úteis (seg–sex) 
+     *  * Regras:
+    * - Conta somente DIAS ÚTEIS (segunda a sexta).
+    * - Considera apenas alocações cujos CONTRATOS estejam vigentes no período a ser calculado.
+    * - Para cada alocação válida:
+    *     custo = salárioHora * (horasSemanais / 5) * diasUteis
+    *   (dividir por 5 assume 5 dias úteis/semana → horas médias por dia)
+    * - Soma o custo de todas as alocações.
+    * - Arredonda o total no final (2 casas decimais).
+    */
+
     @Transactional(readOnly = true)
     public BigDecimal calcularCustoProjetoNoPeriodo(Integer projetoId, LocalDate inicio, LocalDate fim) {
         Projeto p = projetoRepository.findById(projetoId)
