@@ -48,12 +48,21 @@ VALUES ('Plataforma Financeira', '2025-02-01', NULL, 'Sistema para controle de i
 INSERT INTO Projeto (Nome, DataInicioProj, DataFimProj, Descricao)
 VALUES ('App Mobile Vendas', '2025-03-01', NULL, 'Aplicativo de vendas online.');
 
+INSERT INTO Projeto (Nome, DataInicioProj, DataFimProj, Descricao)
+VALUES ('App Gaia', '2024-08-01', '2025-08-31', 'Aplicativo de educação ambiental para escolas');
+
+INSERT INTO Projeto (Nome, DataInicioProj, DataFimProj, Descricao)
+VALUES ('Sistema Solaris', '2024-12-12', NULL, 'Sistema de gestão de energia renovável');
+
+INSERT INTO Projeto (Nome, DataInicioProj, DataFimProj, Descricao)
+VALUES ('Projeto Lúmen', '2023-12-01', '2025-01-01', 'Plataforma para visualização inteligente de dados');
+
+
+
 -- Alocações (agora com IDPessoa)
 -- Projeto 1
 INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 1, 1, 20); -- Ana Gerente
-INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 2, 2, 25); -- Carlos Dev
 INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 3, 3, 15); -- Fernanda Dev
-INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 4, 4, 20); -- Rafael QA
 INSERT INTO Alocacao (IDProjeto, IDContrato, IDPessoa, horaSemana) VALUES (1, 5, 5, 10); -- Juliana Security
 
 -- Projeto 2
