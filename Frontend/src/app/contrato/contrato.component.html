@@ -1,41 +1,43 @@
-<div class="container py-4">
-  <!-- Cabeçalho com botões lado a lado -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="m-0">Contrato</h2>
-    
-    <!-- Botões lado a lado -->
-    <div class="d-flex gap-2">
-      <button class="btn criar-contrato-button"
-              data-bs-toggle="modal"
-              data-bs-target="#modalCriarContrato">
-        Criar Contrato
-      </button>
-    </div>
-  </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="m-0">Contratos</h2>
+  <button class="btn criar-contrato-button" data-bs-toggle="modal" data-bs-target="#modalCriarContrato">
+    Criar Contrato
+  </button>
+</div>
 
+<!-- Modal de criação -->
 <app-modal-criacao-contrato></app-modal-criacao-contrato>
 
-<!-- Card / Tabela de Contratos -->
-<div class="card shadow-sm">
+<!-- Card / Tabela -->
+<div class="card shadow-sm mt-3">
   <div class="table-responsive">
     <table class="table table-hover align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th>Nome</th>
+          <th>Pessoa</th>
+          <th>Perfil</th>
           <th>Início</th>
           <th>Fim</th>
-          <th>Descrição</th>
+          <th>Horas Semanais</th>
+          <th>Salário Hora (R$)</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td> Exemplo projeto </td>
-          <td> 01/01/2025 </td>
-          <td> 01/01/2026 </td>
-          <td> Descrição 1 </td>
+        <tr *ngFor="let contrato of contratos">
+          <td>{{ contrato.pessoaNome }}</td>
+          <td>{{ contrato.perfilNome}}</td>
+          <td>{{ contrato.dataInicioContrato | date:'dd/MM/yyyy' }}</td>
+          <td>{{ contrato.dataFimContrato | date:'dd/MM/yyyy' }}</td>
+          <td>{{ contrato.numeroHorasSemana }}</td>
+          <td>{{ contrato.salarioHora | number:'1.2-2' }}</td>
+        </tr>
+
+        <tr *ngIf="!contratos?.length">
+          <td colspan="6" class="text-center text-muted py-4">
+            Nenhum contrato cadastrado.
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-</div> <!-- Fechamento do container -->
