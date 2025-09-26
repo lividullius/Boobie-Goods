@@ -1,7 +1,11 @@
 package com.boobiegoods.taskly.Data.Interfaces;
 
 import com.boobiegoods.taskly.Domain.Pessoa;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -47,5 +51,10 @@ public interface IPessoaRepository extends JpaRepository<Pessoa, Integer> {
     
     // Buscar pessoas ordenadas por nome
     List<Pessoa> findAllByOrderByNomeAsc();
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO PessoaPerfil (IDPessoa, IDPerfil) VALUES (:pessoaId, :perfilId)", nativeQuery = true)
+    void associarPerfil(@Param("pessoaId") Integer pessoaId, @Param("perfilId") Integer perfilId);
 }
 

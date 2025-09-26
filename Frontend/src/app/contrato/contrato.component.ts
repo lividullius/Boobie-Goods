@@ -5,6 +5,8 @@ import { CommonModule, DatePipe, NgForOf } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 export interface ContratoDTO {
+  fkPessoa: number;
+  fkPerfil: number;
   pessoaNome: string;
   perfilNome: string;
   dataInicioContrato: string;
@@ -34,7 +36,7 @@ export class ContratoComponent implements OnInit {
   private loadContratos(): void {
     this.loading = true;
     this.error = '';
-    this.contratoService.getContratos().subscribe({
+    this.contratoService.getContratosComPessoaEPerfilNome().subscribe({
       next: (res) => {
         this.contratos = res;
         this.loading = false;

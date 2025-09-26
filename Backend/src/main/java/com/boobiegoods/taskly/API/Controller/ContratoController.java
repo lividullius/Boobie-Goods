@@ -22,6 +22,7 @@ import javax.management.RuntimeErrorException;
 
 @RestController
 @RequestMapping("/api/contratos")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ContratoController {
     
     private final ContratoService contratoService;

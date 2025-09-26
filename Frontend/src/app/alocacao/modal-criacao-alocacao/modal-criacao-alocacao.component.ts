@@ -39,14 +39,14 @@ export class ModalCriacaoAlocacaoComponent implements OnInit {
   }
   
   carregarPessoas(): void {
-    this.pessoaService.getAllPessoasComPerfis().subscribe({
+    /* this.pessoaService.getAllPessoasComPerfis().subscribe({
       next: (data) => {
         this.pessoas = data;
       },
       error: (error) => {
         console.error('Erro ao carregar pessoas:', error);
       }
-    });
+    }); */
   }
   
   carregarProjetos(): void {
