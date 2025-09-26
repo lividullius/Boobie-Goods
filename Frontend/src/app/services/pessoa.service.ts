@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 export interface PessoaDTO {
   id?: number
@@ -57,5 +58,20 @@ export class PessoaService {
   addPerfisToPessoa(pessoaId: number, idsPerfis: number[]): Observable<void> {
     return this.http.post<void>(`${this.apiPessoasUrl}/${pessoaId}/perfis`, idsPerfis);
   }
+
+  getAllPessoasComPerfis(): Observable<PessoaDTO[]> {
+  return this.getAllPessoas().pipe(
+
+    map(pessoas => pessoas.map(pessoa => {
+      return firstValueFrom(this.getPerfisFromPessoa(pessoa.id)).then(perfis => ({
+        id: pessoa.id,
+        nome: pessoa.nome,
+        perfis
+      }));
+    })),
+
+    switchMap(promessas => forkJoin(promessas))
+  );
+}
 
 }
