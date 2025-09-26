@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/alocacoes")
-@CrossOrigin(origins = "*")
 public class AlocacaoController {
     
     private final AlocacaoService alocacaoService;
