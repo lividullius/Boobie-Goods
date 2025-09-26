@@ -1,52 +1,77 @@
+
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; 
+import { FormBuilder, FormGroup, Validators, AbstractControl,ReactiveFormsModule  } from '@angular/forms';
+import { ContratoService } from '../../services/contrato.service';
+import { PessoaService, PessoaBackendDTO } from '../../services/pessoa.service';
+import { PerfisService, Perfil } from '../../services/perfil.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-criacao-contrato',
-  imports: [FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './modal-criacao-contrato.component.html',
-  styleUrl: './modal-criacao-contrato.component.scss'
+  styleUrls: ['./modal-criacao-contrato.component.scss']
 })
-export class ModalContratoComponent implements OnInit{
+export class ModalContratoComponent implements OnInit {
   modalContratoForm: FormGroup;
-  mensagemFeedbackSucesso: string =  ' ';
+  pessoas: PessoaBackendDTO[] = [];
+  perfis: Perfil[] = [];
+  mensagemFeedbackSucesso: string = '';
 
-  constructor(private fb: FormBuilder) {
-    this.modalContratoForm = this.fb.group ({
-      pessoa: [' ', Validators.required],
-      perfil: [' ', Validators.required],
-      dataInicio: [' ', Validators.required],
-      dataFinal: [' ', Validators.required],
-      horasSemana: [' ', [Validators.required, Validators.min(1), Validators.max(40)]],
-      salarioHora: [' ', Validators.required], },
-      { validators: this.dataValidator});
+  constructor(
+    private fb: FormBuilder,
+    private contratoService: ContratoService,
+    private pessoaService: PessoaService,
+    private perfisService: PerfisService
+  ) {
+    this.modalContratoForm = this.fb.group({
+      fkPessoa: [null, Validators.required],
+      fkPerfil: [null, Validators.required],
+      dataInicioContrato: ['', Validators.required],
+      dataFimContrato: ['', Validators.required],
+      numeroHorasSemana: [null, [Validators.required, Validators.min(1), Validators.max(40)]],
+      salarioHora: [null, Validators.required],
+    }, { validators: this.dataValidator });
   }
+
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    // Buscar pessoas do backend
+    this.pessoaService.getAllPessoas().subscribe(res => this.pessoas = res);
+
+    // Buscar perfis do backend
+    this.perfisService.getPerfis().subscribe(res => this.perfis = res);
   }
 
   dataValidator(group: AbstractControl) {
-    const inicio = group.get('dataInicio')?.value;
-    const final = group.get('dataFinal')?.value;
+    const inicio = group.get('dataInicioContrato')?.value;
+    const fim = group.get('dataFimContrato')?.value;
+    if (!inicio || !fim) return null;
 
     const inicioContrato = new Date(inicio);
-    const finalContrato = new Date(final);
+    const fimContrato = new Date(fim);
 
-    if(inicioContrato < finalContrato) {
-      return {dataInvalida: true}
-    }
-    return null;
+    return inicioContrato > fimContrato ? { dataInvalida: true } : null;
   }
 
   onSubmit() {
-    if(this.modalContratoForm.invalid) {
+    if (this.modalContratoForm.invalid) {
       this.modalContratoForm.markAllAsTouched();
-
-      this.mensagemFeedbackSucesso = 'Contrato salvo com sucesso';
       return;
     }
-  }
 
+    // Transformar campos numéricos para garantir que backend receba ints/BigDecimal
+    const contrato = { ...this.modalContratoForm.value };
+    contrato.fkPessoa = Number(contrato.fkPessoa);
+    contrato.fkPerfil = Number(contrato.fkPerfil);
+    contrato.numeroHorasSemana = Number(contrato.numeroHorasSemana);
+    contrato.salarioHora = Number(contrato.salarioHora);
+
+    this.contratoService.criarContrato(contrato).subscribe({
+      next: res => {
+        this.mensagemFeedbackSucesso = 'Contrato salvo com sucesso';
+        this.modalContratoForm.reset();
+      },
+      error: err => console.error('Erro ao salvar contrato', err)
+    });
+  }
 }
