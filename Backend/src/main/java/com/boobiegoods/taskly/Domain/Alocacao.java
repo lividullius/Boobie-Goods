@@ -16,12 +16,12 @@ public class Alocacao {
     @JoinColumn(name = "IDProjeto", nullable = false)
     private Projeto projeto;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "IDContrato", nullable = false)
     private Contrato contrato;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IDPessoa", nullable = false)
+    @JoinColumn(name = "IDPessoa", nullable = true)
     private Pessoa pessoa;
     
     @Column(name = "horaSemana", nullable = false)

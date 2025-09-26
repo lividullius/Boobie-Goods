@@ -31,8 +31,8 @@
               (change)="onPessoaChange()"
               required
             >
-              <option value="">-- Selecione uma pessoa --</option>
-              <option *ngFor="let pessoa of pessoas" [value]="pessoa.id">
+              <option [ngValue]="">-- Selecione uma pessoa --</option>
+              <option *ngFor="let pessoa of pessoas" [ngValue]="pessoa.id">
                 {{ pessoa.nome }}
               </option>
             </select>
@@ -50,8 +50,8 @@
               required
               [disabled]="!pessoaSelecionadaId"
             >
-              <option value="">-- Selecione um projeto --</option>
-              <option *ngFor="let projeto of projetosDisponiveis" [value]="projeto.id">
+              <option [ngValue]="">-- Selecione um projeto --</option>
+              <option *ngFor="let projeto of projetosDisponiveis" [ngValue]="projeto.id">
                 {{ projeto.nomeProjeto }}
               </option>
             </select>
@@ -80,7 +80,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancelar
           </button>
           <button 
