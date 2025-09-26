@@ -8,8 +8,6 @@ import com.boobiegoods.taskly.API.Service.PessoaService;
 import com.boobiegoods.taskly.Domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -61,43 +59,52 @@ public class AlocacaoController {
      * POST /api/alocacoes - Criar nova alocação
      */
     @PostMapping
-    public ResponseEntity<AlocacaoDTO> criarAlocacao(@RequestBody AlocacaoDTO alocacaoDTO) {
-        // Buscar projeto
-        Optional<Projeto> projetoOpt = projetoService.findById(alocacaoDTO.getFkProjeto());
-        
-        // Buscar contrato
-        Optional<Contrato> contratoOpt = contratoService.findById(alocacaoDTO.getFkContrato());
-        
-        // Buscar pessoa
-        Optional<Pessoa> pessoaOpt = pessoaService.findById(alocacaoDTO.getFkPessoa());
-        
-        if (projetoOpt.isEmpty() || contratoOpt.isEmpty() || pessoaOpt.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        
-        // Validar se a pessoa já está alocada neste projeto
-        // Esta verificação precisará ser implementada no repositório ou serviço
-        List<Alocacao> alocacoesExistentes = alocacaoService.findAll();
-        boolean jaAlocada = alocacoesExistentes.stream()
-                .anyMatch(a -> a.getPessoa().getId() == alocacaoDTO.getFkPessoa() 
-                          && a.getProjeto().getId() == alocacaoDTO.getFkProjeto());
-        
-        if (jaAlocada) {
-            return ResponseEntity.badRequest().build();
-        }
-        
-        Alocacao novaAlocacao = new Alocacao();
-        // Não precisa definir ID, pois o banco de dados vai gerar
-        novaAlocacao.setProjeto(projetoOpt.get());
-        novaAlocacao.setContrato(contratoOpt.get());
-        novaAlocacao.setPessoa(pessoaOpt.get());
-        novaAlocacao.setHorasSemanal(alocacaoDTO.getHorasSemanal());
-        
-        novaAlocacao = alocacaoService.save(novaAlocacao);
-        
-        AlocacaoDTO alocacaoCriada = converterParaDTO(novaAlocacao);
-        return ResponseEntity.ok(alocacaoCriada);
+public ResponseEntity<AlocacaoDTO> criarAlocacao(@RequestBody AlocacaoDTO alocacaoDTO) {
+    // Buscar projeto
+    Optional<Projeto> projetoOpt = projetoService.findById(alocacaoDTO.getFkProjeto());
+    if (projetoOpt.isEmpty()) {
+        return ResponseEntity.badRequest().body(null); // Projeto obrigatório
     }
+
+    // Buscar pessoa
+    Optional<Pessoa> pessoaOpt = pessoaService.findById(alocacaoDTO.getFkPessoa());
+    if (pessoaOpt.isEmpty()) {
+        return ResponseEntity.badRequest().body(null); // Pessoa obrigatória
+    }
+
+    // Contrato é opcional
+    Contrato contrato = null;
+    if (alocacaoDTO.getFkContrato() != 0) { // só tenta buscar se vier
+        contrato = contratoService.findById(alocacaoDTO.getFkContrato())
+                                  .orElse(null);
+    }
+
+    // Validar se a pessoa já está alocada neste projeto
+    List<Alocacao> alocacoesExistentes = alocacaoService.findAll();
+    boolean jaAlocada = alocacoesExistentes.stream()
+        .anyMatch(a -> a.getPessoa().getId() == alocacaoDTO.getFkPessoa()
+                    && a.getProjeto().getId() == alocacaoDTO.getFkProjeto());
+
+    if (jaAlocada) {
+        return ResponseEntity.badRequest().body(null);
+    }
+
+    Alocacao novaAlocacao = new Alocacao();
+    novaAlocacao.setProjeto(projetoOpt.get());
+    novaAlocacao.setPessoa(pessoaOpt.get());
+    novaAlocacao.setHorasSemanal(alocacaoDTO.getHorasSemanal());
+
+    // seta contrato só se não for null
+    if (contrato != null) {
+        novaAlocacao.setContrato(contrato);
+    }
+
+    novaAlocacao = alocacaoService.save(novaAlocacao);
+
+    AlocacaoDTO alocacaoCriada = converterParaDTO(novaAlocacao);
+    return ResponseEntity.ok(alocacaoCriada);
+}
+
     
     /**
      * GET /api/alocacoes/projeto/{projetoId} - Listar alocações de um projeto

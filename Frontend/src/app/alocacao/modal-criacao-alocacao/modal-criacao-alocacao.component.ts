@@ -39,14 +39,14 @@ export class ModalCriacaoAlocacaoComponent implements OnInit {
   }
   
   carregarPessoas(): void {
-    /* this.pessoaService.getAllPessoasComPerfis().subscribe({
+    this.pessoaService.getAllPessoasComPerfis().subscribe({
       next: (data) => {
         this.pessoas = data;
       },
       error: (error) => {
         console.error('Erro ao carregar pessoas:', error);
       }
-    }); */
+    });
   }
   
   carregarProjetos(): void {
@@ -114,7 +114,8 @@ export class ModalCriacaoAlocacaoComponent implements OnInit {
       projetoId: Number(this.projetoSelecionadoId),
       horasSemanal: this.horasSemanal,
       fkPessoa: Number(this.pessoaSelecionadaId),
-      fkProjeto: Number(this.projetoSelecionadoId)
+      fkProjeto: Number(this.projetoSelecionadoId),
+      fkContrato: 10,
     };
 
     this.alocacaoService.criarAlocacao(novaAlocacao).subscribe({

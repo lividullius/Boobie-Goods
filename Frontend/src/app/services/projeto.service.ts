@@ -14,20 +14,21 @@ export class ProjetoService {
   getAllProjetos(): Observable<Projeto[]> {
     return this.http.get<Projeto[]>(this.base);
   }
+
   getProjetoById(id: number): Observable<Projeto> {
     return this.http.get<Projeto>(`${this.base}/${id}`);
   }
+
   getProjetosNaoAlocados(pessoaId: number): Observable<Projeto[]> {
     return this.http.get<Projeto[]>(`${this.base}/nao-alocados/${pessoaId}`);
   }
+
   createProjeto(projeto: Projeto): Observable<Projeto> {
     return this.http.post<Projeto>(this.base, projeto);
   }
+  
   updateProjeto(id: number, projeto: Projeto): Observable<Projeto> {
     return this.http.put<Projeto>(`${this.base}/${id}`, projeto);
-  }
-  deleteProjeto(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/${id}`);
   }
 
   // Custo 

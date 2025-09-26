@@ -21,6 +21,10 @@ export class AlocacaoService {
 
   constructor(private http: HttpClient) {}
 
+  criarAlocacao(dto: any): Observable<any> {
+    return this.http.post(this.apiUrl, dto);
+  }
+
   // Buscar todas as alocações
   getAllAlocacoes(): Observable<AlocacaoDTO[]> {
     return this.http.get<AlocacaoDTO[]>(this.apiUrl);
@@ -42,9 +46,9 @@ export class AlocacaoService {
   }
 
   // Criar nova alocação
-  criarAlocacao(alocacao: AlocacaoDTO): Observable<AlocacaoDTO> {
-    return this.http.post<AlocacaoDTO>(this.apiUrl, alocacao);
-  }
+  //criarAlocacao(alocacao: AlocacaoDTO): Observable<AlocacaoDTO> {
+    //return this.http.post<AlocacaoDTO>(this.apiUrl, alocacao);
+  //}
 
   // Remover alocação
   removerAlocacao(id: number): Observable<void> {
