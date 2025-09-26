@@ -3,12 +3,20 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="m-0">Projetos</h2>
 
-    <!-- Botão que abre o modal -->
-    <button class="btn criar-contrato-button"
-            data-bs-toggle="modal"
-            data-bs-target="#modalCriarProjeto">
-      Criar projeto
-    </button>
+    <div class="d-flex gap-2">
+      <!-- abre o card de cálculo -->
+      <button type="button" class="btn criar-contrato-button" (click)="abrirCalculo()">
+        Calcular custo
+      </button>
+
+      <!-- Botão que abre o modal -->
+      <button
+        class="btn criar-contrato-button"
+        data-bs-toggle="modal"
+        data-bs-target="#modalCriarProjeto">
+        Criar projeto
+      </button>
+    </div>
   </div>
 
   <!-- ALERTAS -->
@@ -16,34 +24,43 @@
   <div *ngIf="loading" class="alert alert-secondary py-2 mb-3">Carregando...</div>
 
   <!-- ===== Card de teste rápido (cálculo de custo) ===== -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <h5 class="card-title">Teste rápido — custo por projeto</h5>
+  <div id="cardCalculo" class="card shadow-sm mb-4" *ngIf="showCalculo">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="m-0">Teste rápido — custo por projeto</h5>
+      <button class="btn btn-sm btn-outline-secondary" (click)="fecharCalculo()">Fechar</button>
+    </div>
 
+    <div class="card-body">
       <ul class="mb-2">
         <li *ngFor="let p of projetos" class="mb-2">
           <strong>{{ p.nomeProjeto }}</strong>
           <span class="text-muted">(id: {{ p.id }})</span>
 
-          <button class="btn btn-sm btn-outline-primary ms-2"
-                  (click)="verCusto(p.id)">
+          <button
+            class="btn btn-sm btn-outline-primary ms-2"
+            (click)="verCusto(p.id)">
             Custo geral
           </button>
 
           <span class="ms-3">
             Período:
-            <input type="date"
-                   class="form-control form-control-sm d-inline-block"
-                   style="width: 170px"
-                   [(ngModel)]="dataInicio"
-                   [ngModelOptions]="{standalone: true}">
-            <input type="date"
-                   class="form-control form-control-sm d-inline-block ms-2"
-                   style="width: 170px"
-                   [(ngModel)]="dataFim"
-                   [ngModelOptions]="{standalone: true}">
-            <button class="btn btn-sm btn-outline-secondary ms-2"
-                    (click)="verCustoPeriodo(p.id)">
+            <input
+              type="date"
+              class="form-control form-control-sm d-inline-block"
+              style="width: 170px"
+              [(ngModel)]="dataInicio"
+              [ngModelOptions]="{ standalone: true }" />
+
+            <input
+              type="date"
+              class="form-control form-control-sm d-inline-block ms-2"
+              style="width: 170px"
+              [(ngModel)]="dataFim"
+              [ngModelOptions]="{ standalone: true }" />
+
+            <button
+              class="btn btn-sm btn-outline-secondary ms-2"
+              (click)="verCustoPeriodo(p.id)">
               Custo no período
             </button>
           </span>
@@ -79,6 +96,7 @@
             <td>{{ p.dataTerminoProjeto | date:'dd/MM/yyyy' }}</td>
             <td>{{ p.descricaoProjeto }}</td>
           </tr>
+
           <tr *ngIf="!projetos?.length">
             <td colspan="4" class="text-center text-muted py-4">
               Nenhum projeto cadastrado.
@@ -91,7 +109,12 @@
 </div>
 
 <!-- MODAL BOOTSTRAP -->
-<div class="modal fade" id="modalCriarProjeto" tabindex="-1" aria-labelledby="modalCriarProjetoLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="modalCriarProjeto"
+  tabindex="-1"
+  aria-labelledby="modalCriarProjetoLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
 
@@ -104,29 +127,73 @@
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Nome*</label>
-            <input type="text" class="form-control" formControlName="nome" maxlength="100">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nome"
+              maxlength="100"
+              [class.is-invalid]="form.get('nome')?.invalid && form.get('nome')?.touched" />
+            <div class="invalid-feedback" *ngIf="form.get('nome')?.errors?.['required']">
+              Informe o nome do projeto.
+            </div>
+            <div class="invalid-feedback" *ngIf="form.get('nome')?.errors?.['maxlength']">
+              Máximo de 100 caracteres.
+            </div>
           </div>
 
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Data início*</label>
-              <input type="date" class="form-control" formControlName="dataInicio">
+              <input
+                type="date"
+                class="form-control"
+                formControlName="dataInicio"
+                [class.is-invalid]="form.get('dataInicio')?.invalid && form.get('dataInicio')?.touched" />
+              <div class="invalid-feedback" *ngIf="form.get('dataInicio')?.errors?.['required']">
+                Informe a data de início.
+              </div>
             </div>
+
             <div class="col-md-6">
               <label class="form-label">Data fim</label>
-              <input type="date" class="form-control" formControlName="dataFim">
+              <input
+                type="date"
+                class="form-control"
+                formControlName="dataFim"
+                [class.is-invalid]="form.get('dataFim')?.invalid && form.get('dataFim')?.touched" />
+              <div class="invalid-feedback" *ngIf="form.get('dataFim')?.errors?.['menorQueInicio']">
+                A data fim não pode ser menor que a data de início.
+              </div>
             </div>
           </div>
 
           <div class="mt-3">
             <label class="form-label">Descrição</label>
-            <textarea rows="3" class="form-control" formControlName="descricao" maxlength="255"></textarea>
+            <textarea
+              rows="3"
+              class="form-control"
+              formControlName="descricao"
+              maxlength="255"></textarea>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="salvando || form.invalid">
+            <span
+              *ngIf="salvando"
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true">
+            </span>
+            Salvar
+          </button>
         </div>
       </form>
 
